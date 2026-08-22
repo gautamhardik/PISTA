@@ -1,5 +1,8 @@
 # PISTA — Transaction Intelligence
 
+[![Live Frontend](https://img.shields.io/badge/Frontend-Live_on_Vercel-000000.svg?style=flat&logo=vercel)](https://frontend-sigma-vert-50.vercel.app)
+[![GitHub](https://img.shields.io/badge/Source-gautamhardik%2FPISTA-181717.svg?style=flat&logo=github)](https://github.com/gautamhardik/PISTA)
+
 > **From transaction signals to calibrated risk decisions.**
 
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI_0.115-009688.svg?style=flat&logo=fastapi)](https://fastapi.tiangolo.com/)
@@ -331,25 +334,41 @@ Runtime health probes, environment parameters, and cryptographic invariants.
 
 ## 17. Local Setup & Execution Guide
 
+> **Frontend (UI only)** is live publicly at **[https://frontend-sigma-vert-50.vercel.app](https://frontend-sigma-vert-50.vercel.app)** — no setup required to view all 8 routes.
+>
+> **Full end-to-end** (ML inference + Razorpay + PostgreSQL) requires the local Docker stack below.
+
 ### Prerequisites
-* Docker & Docker Compose installed.
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running.
+* Git installed.
 
 ### One-Command Production Launch
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-org/pista.git
-cd pista
+git clone https://github.com/gautamhardik/PISTA.git
+cd PISTA
 
-# 2. Launch all 3 orchestrated containers
+# 2. Launch all 3 production containers (PostgreSQL + FastAPI + Next.js)
 docker compose up --build -d
 
-# 3. Verify container health
+# 3. Verify all containers are healthy
 docker compose ps
 ```
 
-* **Frontend Dashboard**: [http://localhost:3000](http://localhost:3000)
-* **Backend API Docs (Swagger)**: [http://localhost:8000/docs](http://localhost:8000/docs)
-* **PostgreSQL Database**: Port `5432` (`postgres:postgres@localhost:5432/riskguard`)
+Expected output — all three containers healthy:
+```
+NAME                 STATUS
+riskguard-postgres   Up (healthy)
+riskguard-backend    Up (healthy)
+riskguard-frontend   Up
+```
+
+| Service | URL | Description |
+|---------|-----|-------------|
+| **Frontend** | http://localhost:3000 | Full PISTA dashboard |
+| **Backend API** | http://localhost:8000/docs | Interactive Swagger UI |
+| **Health Check** | http://localhost:8000/health | Backend liveness probe |
+| **PostgreSQL** | localhost:5432 | `riskguard` DB, user `postgres` |
 
 ---
 
@@ -384,7 +403,8 @@ PISTA/
 │   ├── app/                           # Core routes, services, schemas, and DB models
 │   ├── artifacts/                     # Production champion & benchmark challenger
 │   ├── tests/                         # Automated unit & integration test suites
-│   ├── requirements.txt
+│   ├── requirements.txt               # Slim deps (Vercel serverless)
+│   ├── requirements-full.txt          # Full deps (Docker — includes XGBoost, CatBoost)
 │   └── Dockerfile
 │
 ├── frontend/                          # Next.js 16 Spatial UI

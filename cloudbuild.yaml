@@ -1,0 +1,37 @@
+steps:
+  # Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'asia-south1-docker.pkg.dev/$PROJECT_ID/pista/backend:$COMMIT_SHA'
+      - '-f'
+      - 'backend/Dockerfile'
+      - 'backend'
+
+  # Push to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'asia-south1-docker.pkg.dev/$PROJECT_ID/pista/backend:$COMMIT_SHA'
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'pista-backend'
+      - '--image=asia-south1-docker.pkg.dev/$PROJECT_ID/pista/backend:$COMMIT_SHA'
+      - '--region=asia-south1'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--port=8000'
+      - '--memory=2Gi'
+      - '--cpu=1'
+      - '--min-instances=0'
+      - '--max-instances=5'
+      - '--set-env-vars=DATABASE_URL=postgresql://neondb_owner:npg_1ruhCdyn6MXE@ep-ancient-bread-b36404g3-pooler.c-4.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require,RAZORPAY_KEY_ID=rzp_test_TShUcPwAvvFwoz,RAZORPAY_KEY_SECRET=JrJZ6NqeH9QvysbWxVoTjxGi,RAZORPAY_WEBHOOK_SECRET=rzp_webhook_secret_riskguard_2026'
+
+images:
+  - 'asia-south1-docker.pkg.dev/$PROJECT_ID/pista/backend:$COMMIT_SHA'
