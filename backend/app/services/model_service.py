@@ -13,8 +13,9 @@ class ModelService:
         self.feature_order = []
         self.metadata = {}
         self.is_ready = False
+        self._load_artifacts()
 
-    def load_artifacts(self):
+    def _load_artifacts(self):
         try:
             logger.info("Loading RiskGuard Champion & Challenger artifacts...")
             
@@ -43,10 +44,16 @@ class ModelService:
                     self.metadata = json.load(f)
                 logger.info(f"Loaded Model Metadata: {self.metadata.get('model_name')}")
 
-            # 5. Load Challenger (Optional / Lazy)
+            # 5. Load Challenger (Optional / Lazy — requires xgboost & catboost)
             if os.path.exists(settings.CHALLENGER_BUNDLE_PATH):
-                self.challenger_bundle = joblib.load(settings.CHALLENGER_BUNDLE_PATH)
-                logger.info("Loaded Challenger Ensemble Bundle.")
+                try:
+                    self.challenger_bundle = joblib.load(settings.CHALLENGER_BUNDLE_PATH)
+                    logger.info("Loaded Challenger Ensemble Bundle.")
+                except Exception as e:
+                    logger.warning(
+                        f"Challenger bundle skipped (optional deps missing in slim runtime): {e}"
+                    )
+                    self.challenger_bundle = None
 
             self.is_ready = True
             logger.info("RiskGuard ModelService is fully initialized and READY.")
@@ -78,4 +85,5 @@ class ModelService:
                 pass
         return raw_prob
 
+# Load at module level for serverless (Vercel) - persists across warm invocations
 model_service = ModelService()

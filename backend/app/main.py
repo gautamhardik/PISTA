@@ -15,7 +15,7 @@ async def lifespan(app: FastAPI):
     # Startup
     logger.info("Initializing RiskGuard Backend Service...")
     init_db()
-    model_service.load_artifacts()
+    # Model artifacts loaded at module level in model_service
     yield
     # Shutdown
     logger.info("Shutting down RiskGuard Backend Service.")
@@ -46,3 +46,12 @@ app.include_router(payments.router, prefix=settings.API_V1_PREFIX, tags=["Razorp
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+
+# Vercel / AWS Lambda ASGI handler (mangum adapts FastAPI for serverless)
+try:
+    from mangum import Mangum
+    # Ensure DB tables exist on serverless cold start (lifespan won't fire)
+    init_db()
+    handler = Mangum(app, lifespan="off")
+except ImportError:
+    pass
