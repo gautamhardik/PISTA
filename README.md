@@ -403,8 +403,7 @@ PISTA/
 │   ├── app/                           # Core routes, services, schemas, and DB models
 │   ├── artifacts/                     # Production champion & benchmark challenger
 │   ├── tests/                         # Automated unit & integration test suites
-│   ├── requirements.txt               # Slim deps (Vercel serverless)
-│   ├── requirements-full.txt          # Full deps (Docker — includes XGBoost, CatBoost)
+│   ├── requirements.txt               # Complete Python dependencies
 │   └── Dockerfile
 │
 ├── frontend/                          # Next.js 16 Spatial UI

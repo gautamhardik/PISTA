@@ -17,8 +17,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies (full stack including catboost/xgboost for Docker/Render)
-COPY requirements-full.txt requirements.txt
+# Install Python dependencies
+COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # Copy backend application code and ML champion artifacts
