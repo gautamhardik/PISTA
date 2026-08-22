@@ -1,33 +1,36 @@
-# PISTA — Transaction Intelligence
+<div align="center">
 
-[![Live Frontend](https://img.shields.io/badge/Frontend-Live_on_Vercel-000000.svg?style=flat&logo=vercel)](https://frontend-sigma-vert-50.vercel.app)
-[![GitHub](https://img.shields.io/badge/Source-gautamhardik%2FPISTA-181717.svg?style=flat&logo=github)](https://github.com/gautamhardik/PISTA)
+# ⚡ PISTA — Transaction Intelligence
+### *From payment telemetry signals to calibrated, explainable fraud risk decisions in sub-milliseconds.*
 
-> **From transaction signals to calibrated risk decisions.**
+[![Live Demo](https://img.shields.io/badge/⚡_Live_Platform-Vercel_Production-000000.svg?style=for-the-badge&logo=vercel&logoColor=white)](https://frontend-sigma-vert-50.vercel.app)
+[![GitHub Source](https://img.shields.io/badge/GitHub-Repository-181717.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/gautamhardik/PISTA)
+[![Python 3.13](https://img.shields.io/badge/Python-3.13+-3776AB.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688.svg?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Next.js 16](https://img.shields.io/badge/Next.js_16-Turbopack-000000.svg?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![LightGBM Champion](https://img.shields.io/badge/LightGBM-Champion_Booster-3395FF.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://lightgbm.readthedocs.io/)
+[![TreeSHAP](https://img.shields.io/badge/Explainability-TreeSHAP-C7F36B.svg?style=for-the-badge&labelColor=07080a)](https://shap.readthedocs.io/)
+[![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16_Alpine-4169E1.svg?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Razorpay](https://img.shields.io/badge/Razorpay-Test_Mode_HMAC-0C2340.svg?style=for-the-badge&logo=razorpay&logoColor=white)](https://razorpay.com/)
+[![Tests Passing](https://img.shields.io/badge/Test_Suite-12%2F12_Passing_100%25-10B981.svg?style=for-the-badge&logo=pytest&logoColor=white)](file:///c:/Users/hiten/Documents/RP/backend/tests)
 
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI_0.115-009688.svg?style=flat&logo=fastapi)](https://fastapi.tiangolo.com/)
-[![Next.js](https://img.shields.io/badge/Frontend-Next.js_16_Turbopack-000000.svg?style=flat&logo=next.js)](https://nextjs.org/)
-[![LightGBM](https://img.shields.io/badge/Model-LightGBM_Champion-3395FF.svg?style=flat)](https://lightgbm.readthedocs.io/)
-[![TreeSHAP](https://img.shields.io/badge/Explainability-TreeSHAP-C7F36B.svg?style=flat&labelColor=07080a)](https://shap.readthedocs.io/)
-[![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL_16-4169E1.svg?style=flat&logo=postgresql)](https://www.postgresql.org/)
-[![Razorpay](https://img.shields.io/badge/Gateway-Razorpay_Test_Mode-0C2340.svg?style=flat&logo=razorpay)](https://razorpay.com/)
-[![Tests](https://img.shields.io/badge/Tests-12%2F12_Passing-10B981.svg?style=flat)](file:///c:/Users/hiten/Documents/RP/backend/tests)
+<br/>
 
-PISTA is an end-to-end transaction intelligence and fraud decisioning platform. It transforms payment telemetry across 492 engineered dimensions into calibrated fraud probabilities, TreeSHAP model-attributed factor contributions, and automated operational actions (`APPROVE`, `REVIEW`, `BLOCK`) with immutable PostgreSQL audit trails.
+</div>
 
 ---
 
-> ### 📋 Evaluator Snapshot (15-Second Executive Brief)
-> * **Problem**: Operational payment fraud decisioning under severe class imbalance (3.5% base incidence).
-> * **Dataset**: IEEE-CIS Fraud Detection (590,540 rows, chronological out-of-time evaluation).
+> ### 📋 Executive Evaluator Brief (15-Second Executive Brief)
+> * **Core Problem**: Real-time payment fraud decisioning under extreme class imbalance (3.5% base incidence).
+> * **Benchmark Dataset**: IEEE-CIS Fraud Detection (590,540 rows, out-of-time chronological validation split).
 > * **Production Champion**: `PISTA LightGBM Champion` (Tuned LightGBM + Isotonic Probability Calibrator).
-> * **Feature Representation**: 492 engineered dimensions across 10 causal feature families.
+> * **Feature Space**: **492 engineered dimensions** spanning 10 causal feature families (spending deviations, velocity bursts, composite cards).
 > * **Primary Optimization Metric**: **PR-AUC = 0.5450** (Held-out validation cohort of 118,534 transactions).
-> * **Discrimination & Calibration**: **ROC-AUC = 0.9130**, **Brier Score = 0.0234**.
-> * **Latency Performance**: Model Inference **< 1.0 ms** | Observed End-to-End Pipeline **P50: ~120 ms**, **P95: ~4,895 ms** ($n=14$).
-> * **Operational Routing**: Tri-State Policy ($\tau_{\text{review}} = 0.25$, $\tau_{\text{block}} = 0.75$).
-> * **Payment Integration**: Razorpay Test Mode with HMAC-SHA256 signature verification & idempotent webhook handling.
-> * **Reproducibility**: 5-notebook ML pipeline (`Notebooks/01` to `Notebooks/05`).
+> * **Calibration Quality**: **ROC-AUC = 0.9130**, **Brier Score = 0.0234** (Isotonic Regression).
+> * **Latency Performance**: Model Inference **< 1.0 ms** | End-to-End API Scoring **~40–60 ms** (including local SHAP attribution).
+> * **Operational Policy**: Tri-State Operational Routing ($\tau_{\text{review}} = 0.25$, $\tau_{\text{block}} = 0.75$).
+> * **Gateway Verification**: Razorpay Standard Checkout Test Mode with raw-byte HMAC-SHA256 signature verification & idempotent webhook store.
+> * **End-to-End Reproducibility**: 5-part executable Jupyter notebook suite (`Notebooks/01` to `Notebooks/05`).
 
 ---
 
@@ -357,10 +360,10 @@ docker compose ps
 
 Expected output — all three containers healthy:
 ```
-NAME                 STATUS
-riskguard-postgres   Up (healthy)
-riskguard-backend    Up (healthy)
-riskguard-frontend   Up
+NAME              STATUS
+pista-postgres    Up (healthy)
+pista-backend     Up (healthy)
+pista-frontend    Up
 ```
 
 | Service | URL | Description |
@@ -368,7 +371,7 @@ riskguard-frontend   Up
 | **Frontend** | http://localhost:3000 | Full PISTA dashboard |
 | **Backend API** | http://localhost:8000/docs | Interactive Swagger UI |
 | **Health Check** | http://localhost:8000/health | Backend liveness probe |
-| **PostgreSQL** | localhost:5432 | `riskguard` DB, user `postgres` |
+| **PostgreSQL** | localhost:5432 | `pista_db`, user `pista_user` |
 
 ---
 

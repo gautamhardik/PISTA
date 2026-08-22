@@ -4,40 +4,40 @@ services:
   # 1. PostgreSQL Database Service
   postgres:
     image: postgres:16-alpine
-    container_name: riskguard-postgres
+    container_name: pista-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-riskguard_db}
-      POSTGRES_USER: ${POSTGRES_USER:-riskguard_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-riskguard_secure_password}
+      POSTGRES_DB: ${POSTGRES_DB:-pista_db}
+      POSTGRES_USER: ${POSTGRES_USER:-pista_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pista_secure_password}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-riskguard_user} -d ${POSTGRES_DB:-riskguard_db}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-pista_user} -d ${POSTGRES_DB:-pista_db}"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 5s
     networks:
-      - riskguard-network
+      - pista-network
 
   # 2. FastAPI ML Decision Backend
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: riskguard-backend
+    container_name: pista-backend
     restart: unless-stopped
     environment:
-      - PROJECT_NAME=RiskGuard Production Fraud Decision API
+      - PROJECT_NAME=PISTA Transaction Intelligence API
       - VERSION=1.0.0
       - API_V1_PREFIX=/api/v1
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-riskguard_user}:${POSTGRES_PASSWORD:-riskguard_secure_password}@postgres:5432/${POSTGRES_DB:-riskguard_db}
-      - RAZORPAY_KEY_ID=${RAZORPAY_KEY_ID:-rzp_test_TShUcPwAvvFwoz}
-      - RAZORPAY_KEY_SECRET=${RAZORPAY_KEY_SECRET:-JrJZ6NqeH9QvysbWxVoTjxGi}
-      - RAZORPAY_WEBHOOK_SECRET=${RAZORPAY_WEBHOOK_SECRET:-rzp_webhook_secret_riskguard_2026}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-pista_user}:${POSTGRES_PASSWORD:-pista_secure_password}@postgres:5432/${POSTGRES_DB:-pista_db}
+      - RAZORPAY_KEY_ID=${RAZORPAY_KEY_ID:-rzp_test_placeholder}
+      - RAZORPAY_KEY_SECRET=${RAZORPAY_KEY_SECRET:-placeholder_secret}
+      - RAZORPAY_WEBHOOK_SECRET=${RAZORPAY_WEBHOOK_SECRET:-placeholder_webhook_secret}
     ports:
       - "8000:8000"
     depends_on:
@@ -50,7 +50,7 @@ services:
       retries: 3
       start_period: 10s
     networks:
-      - riskguard-network
+      - pista-network
 
   # 3. Next.js Premium Frontend
   frontend:
@@ -59,7 +59,7 @@ services:
       dockerfile: Dockerfile
       args:
         NEXT_PUBLIC_API_URL: http://localhost:8000
-    container_name: riskguard-frontend
+    container_name: pista-frontend
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -67,12 +67,12 @@ services:
       backend:
         condition: service_healthy
     networks:
-      - riskguard-network
+      - pista-network
 
 volumes:
   postgres_data:
     driver: local
 
 networks:
-  riskguard-network:
+  pista-network:
     driver: bridge
