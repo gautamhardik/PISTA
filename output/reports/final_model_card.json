@@ -1,0 +1,30 @@
+{
+  "model_name": "RiskGuard-LightGBM-Champion-Fraud-Detector",
+  "model_version": "v1.0",
+  "model_task": "Binary Fraud Classification & Tri-State Risk Routing",
+  "training_cohort": "Days 0.00 to 140.00 (468,790 transactions)",
+  "validation_cohort": "Days 140.00 to 182.00 (121,750 transactions)",
+  "test_cohort": "Days 213.00 to 395.00 (506,691 transactions)",
+  "primary_metrics": {
+    "roc_auc": 0.913,
+    "pr_auc": 0.545,
+    "raw_brier_score": 0.0916,
+    "calibrated_brier_score": 0.0234,
+    "f1_optimal_threshold": 0.86,
+    "f1_optimal_score": 0.4635,
+    "cost_optimal_threshold": 0.61,
+    "cost_optimal_expected_loss_usd": 313805.03
+  },
+  "decision_policy": {
+    "tau_review": 0.25,
+    "tau_block": 0.75,
+    "auto_approve_rate_pct": 98.12,
+    "manual_review_rate_pct": 1.03,
+    "auto_block_rate_pct": 0.85,
+    "fraud_interception_efficiency_pct": 35.92
+  },
+  "calibration_method": "Isotonic Regression",
+  "total_features": 492,
+  "export_timestamp_utc": "2026-08-21T17:46:45.334358+00:00",
+  "governance_status": "PRODUCTION_DECISION_ENGINE_APPROVED"
+}

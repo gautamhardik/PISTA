@@ -1,0 +1,426 @@
+[
+  {
+    "feature_name": "fe_time_rel_days",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 20.8763,
+    "psi_val_to_test": 22.1835,
+    "psi_train_to_test": 22.1837,
+    "health_status": "DRIFT_WARNING"
+  },
+  {
+    "feature_name": "fe_time_rel_hours",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 20.8763,
+    "psi_val_to_test": 22.1835,
+    "psi_train_to_test": 22.1837,
+    "health_status": "DRIFT_WARNING"
+  },
+  {
+    "feature_name": "fe_time_diurnal_hour",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0093,
+    "psi_val_to_test": 0.0028,
+    "psi_train_to_test": 0.0031,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_time_sin_hour",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0113,
+    "psi_val_to_test": 0.0052,
+    "psi_train_to_test": 0.0015,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_time_cos_hour",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0247,
+    "psi_val_to_test": 0.0084,
+    "psi_train_to_test": 0.0053,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_amt_log1p",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.004,
+    "psi_val_to_test": 0.0058,
+    "psi_train_to_test": 0.0038,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_amt_cents",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0049,
+    "psi_val_to_test": 0.0051,
+    "psi_train_to_test": 0.0009,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_amt_is_round",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0,
+    "psi_val_to_test": 0.0,
+    "psi_train_to_test": 0.0,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_amt_is_round_10",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0,
+    "psi_val_to_test": 0.0,
+    "psi_train_to_test": 0.0,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_amt_is_round_100",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0,
+    "psi_val_to_test": 0.0,
+    "psi_train_to_test": 0.0,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_addr_dist1_isna",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0,
+    "psi_val_to_test": 0.0,
+    "psi_train_to_test": 0.0,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_addr_dist2_isna",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0,
+    "psi_val_to_test": 0.0,
+    "psi_train_to_test": 0.0,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_addr_addr1_isna",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0,
+    "psi_val_to_test": 0.0,
+    "psi_train_to_test": 0.0,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_addr_addr2_isna",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0,
+    "psi_val_to_test": 0.0,
+    "psi_train_to_test": 0.0,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_id_has_identity",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0,
+    "psi_val_to_test": 0.0,
+    "psi_train_to_test": 0.0,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_id_populated_count",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0151,
+    "psi_val_to_test": 0.0349,
+    "psi_train_to_test": 0.0021,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_id_completeness_ratio",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0151,
+    "psi_val_to_test": 0.0349,
+    "psi_train_to_test": 0.0021,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_miss_total_count",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.1975,
+    "psi_val_to_test": 0.1573,
+    "psi_train_to_test": 0.4336,
+    "health_status": "REVIEW"
+  },
+  {
+    "feature_name": "fe_miss_global_ratio",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.1975,
+    "psi_val_to_test": 0.1573,
+    "psi_train_to_test": 0.4336,
+    "health_status": "REVIEW"
+  },
+  {
+    "feature_name": "fe_miss_v_count",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.2354,
+    "psi_val_to_test": 0.1654,
+    "psi_train_to_test": 0.4348,
+    "health_status": "REVIEW"
+  },
+  {
+    "feature_name": "fe_miss_d_count",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.1745,
+    "psi_val_to_test": 0.1023,
+    "psi_train_to_test": 0.4043,
+    "health_status": "REVIEW"
+  },
+  {
+    "feature_name": "fe_stat_card1_has_history",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0,
+    "psi_val_to_test": 0.0,
+    "psi_train_to_test": 0.0,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_stat_card1_hist_mean",
+    "null_pct_train": 2.7,
+    "psi_train_to_val": 0.0592,
+    "psi_val_to_test": 0.0319,
+    "psi_train_to_test": 0.1007,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_stat_card1_addr1_mean",
+    "null_pct_train": 7.75,
+    "psi_train_to_val": 0.0306,
+    "psi_val_to_test": 0.0156,
+    "psi_train_to_test": 0.0515,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_stat_card1_prod_mean",
+    "null_pct_train": 4.21,
+    "psi_train_to_val": 0.0494,
+    "psi_val_to_test": 0.0224,
+    "psi_train_to_test": 0.0429,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_stat_card1_hist_std",
+    "null_pct_train": 4.68,
+    "psi_train_to_val": 0.0477,
+    "psi_val_to_test": 0.022,
+    "psi_train_to_test": 0.1135,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_stat_amt_diff_hist_mean",
+    "null_pct_train": 2.7,
+    "psi_train_to_val": 0.008,
+    "psi_val_to_test": 0.0047,
+    "psi_train_to_test": 0.0102,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_stat_amt_to_hist_mean_ratio",
+    "null_pct_train": 2.7,
+    "psi_train_to_val": 0.0062,
+    "psi_val_to_test": 0.0028,
+    "psi_train_to_test": 0.0085,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_stat_amt_zscore_card1",
+    "null_pct_train": 4.68,
+    "psi_train_to_val": 0.0224,
+    "psi_val_to_test": 0.0011,
+    "psi_train_to_test": 0.023,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_stat_amt_coef_variation",
+    "null_pct_train": 4.68,
+    "psi_train_to_val": 0.0603,
+    "psi_val_to_test": 0.0706,
+    "psi_train_to_test": 0.1261,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_stat_amt_to_card1_addr1_mean_ratio",
+    "null_pct_train": 7.75,
+    "psi_train_to_val": 0.0059,
+    "psi_val_to_test": 0.0024,
+    "psi_train_to_test": 0.0093,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_stat_amt_to_card1_prod_mean_ratio",
+    "null_pct_train": 4.21,
+    "psi_train_to_val": 0.0045,
+    "psi_val_to_test": 0.0023,
+    "psi_train_to_test": 0.0008,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_lag_amt_1",
+    "null_pct_train": 2.7,
+    "psi_train_to_val": 0.0037,
+    "psi_val_to_test": 0.0056,
+    "psi_train_to_test": 0.0038,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_lag_amt_2",
+    "null_pct_train": 4.68,
+    "psi_train_to_val": 0.0037,
+    "psi_val_to_test": 0.0057,
+    "psi_train_to_test": 0.0038,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_velo_is_first_card_tx",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0,
+    "psi_val_to_test": 0.0,
+    "psi_train_to_test": 0.0,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_velo_log_time_since_prev_tx",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0057,
+    "psi_val_to_test": 0.002,
+    "psi_train_to_test": 0.0047,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_velo_burst_10min",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0,
+    "psi_val_to_test": 0.0,
+    "psi_train_to_test": 0.0,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_velo_burst_1h",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0,
+    "psi_val_to_test": 0.0,
+    "psi_train_to_test": 0.0,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_lag_amt_diff_1",
+    "null_pct_train": 2.7,
+    "psi_train_to_val": 0.0035,
+    "psi_val_to_test": 0.0003,
+    "psi_train_to_test": 0.0022,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_roll_card_txn_count_1h",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0056,
+    "psi_val_to_test": 0.0019,
+    "psi_train_to_test": 0.0016,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_roll_card_txn_count_24h",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0122,
+    "psi_val_to_test": 0.0073,
+    "psi_train_to_test": 0.0056,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_roll_card_amt_sum_1h",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0036,
+    "psi_val_to_test": 0.0006,
+    "psi_train_to_test": 0.003,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_roll_card_amt_sum_24h",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0074,
+    "psi_val_to_test": 0.0006,
+    "psi_train_to_test": 0.0084,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_roll_card_amt_mean_24h",
+    "null_pct_train": 21.4,
+    "psi_train_to_val": 0.0069,
+    "psi_val_to_test": 0.0096,
+    "psi_train_to_test": 0.0136,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_nov_email_both_present",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0,
+    "psi_val_to_test": 0.0,
+    "psi_train_to_test": 0.0,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_nov_email_match",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0,
+    "psi_val_to_test": 0.0,
+    "psi_train_to_test": 0.0,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_nov_email_mismatch",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0,
+    "psi_val_to_test": 0.0,
+    "psi_train_to_test": 0.0,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_inter_amt_x_prod_c",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0036,
+    "psi_val_to_test": 0.0115,
+    "psi_train_to_test": 0.0003,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_nov_is_new_card_addr",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0,
+    "psi_val_to_test": 0.0,
+    "psi_train_to_test": 0.0,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_nov_is_new_card_device",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0,
+    "psi_val_to_test": 0.0,
+    "psi_train_to_test": 0.0,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_nov_is_new_card_email",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0,
+    "psi_val_to_test": 0.0,
+    "psi_train_to_test": 0.0,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_net_card_unique_addr_count",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0841,
+    "psi_val_to_test": 0.0255,
+    "psi_train_to_test": 0.1374,
+    "health_status": "HEALTHY"
+  },
+  {
+    "feature_name": "fe_net_card_unique_device_count",
+    "null_pct_train": 0.0,
+    "psi_train_to_val": 0.0187,
+    "psi_val_to_test": 0.0029,
+    "psi_train_to_test": 0.0366,
+    "health_status": "HEALTHY"
+  }
+]

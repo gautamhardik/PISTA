@@ -1,0 +1,48 @@
+# Environment Variables & Secrets (Keep .env.example tracked)
+.env
+.env.local
+.env.*.local
+*.env
+!.env.example
+
+# Python & Caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Large Datasets (Protect Git repo size)
+Data/raw/*.csv
+Data/features/*.parquet
+Data/processed/*.parquet
+!Data/README.md
+
+# SQLite, Local Logs & PostgreSQL Volumes
+*.db
+*.sqlite3
+postgres_data/
+*.log
+
+# Next.js & Node
+node_modules/
+.next/
+out/
+build/
+dist/
+.npm
+npm-debug.log*
+
+# Jupyter Checkpoints
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

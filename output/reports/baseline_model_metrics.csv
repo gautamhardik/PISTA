@@ -1,0 +1,8 @@
+Model,ROC-AUC,PR-AUC,F1-Score (tau=0.5),Precision,Recall,Balanced Accuracy,Overall Accuracy
+LightGBM (Tuned),0.913,0.545,0.3854,0.2635,0.7174,0.823,0.9214
+RiskGuard Ensemble Blend,0.9151,0.5413,0.3844,0.2619,0.7221,0.8248,0.9205
+XGBoost (Tuned),0.9129,0.534,0.3867,0.2666,0.7039,0.8175,0.9233
+CatBoost,0.9039,0.4926,0.3069,0.1926,0.7542,0.8209,0.8829
+Random Forest,0.8852,0.4588,0.3183,0.209,0.6671,0.7886,0.9018
+Logistic Regression,0.7869,0.1677,0.1585,0.0896,0.6857,0.7189,0.7498
+Majority Class,0.5,0.0344,0.0,0.0,0.0,0.5,0.9656

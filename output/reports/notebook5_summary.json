@@ -1,0 +1,21 @@
+{
+  "notebook": "05_model_explainability_and_risk_decisioning.ipynb",
+  "champion_model": "LightGBM",
+  "total_features_explained": 492,
+  "top_shap_features": [
+    "C13",
+    "card6",
+    "V258",
+    "C14",
+    "C1"
+  ],
+  "top_5_shap_share_pct": 17.67,
+  "calibrated_risk_bands": {
+    "low_risk_volume_pct": 94.5,
+    "critical_risk_volume_pct": 1.11,
+    "critical_risk_fraud_rate_pct": 87.35
+  },
+  "top_100_triage_queue_generated": true,
+  "sanity_leakage_checks_passed": true,
+  "governance_status": "FRAUD_EXPLAINABILITY_AND_DECISIONING_APPROVED"
+}

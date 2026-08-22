@@ -1,0 +1,36 @@
+{
+  "policy_name": "RiskGuard-3Way-TriState-Policy",
+  "tau_review": 0.25,
+  "tau_block": 0.75,
+  "threshold_taxonomy": [
+    {
+      "Decision Purpose": "Default Baseline Classifier",
+      "Threshold (tau)": "0.50",
+      "Optimization Target": "Balanced ranking balance without cost weighting",
+      "Operational Action": "Statistical Baseline Reference"
+    },
+    {
+      "Decision Purpose": "F1-Optimal Classification",
+      "Threshold (tau)": "0.86",
+      "Optimization Target": "Harmonic mean of Precision & Recall",
+      "Operational Action": "Balanced Binary Classification"
+    },
+    {
+      "Decision Purpose": "Economic Cost-Optimal",
+      "Threshold (tau)": "0.61",
+      "Optimization Target": "Total dollar risk: FN($) + FP($15)",
+      "Operational Action": "Cost-Minimizing Alert Policy"
+    },
+    {
+      "Decision Purpose": "Operational Tri-State Policy",
+      "Threshold (tau)": "0.25 / 0.75",
+      "Optimization Target": "Approve (P<0.25) / Review (0.25<=P<0.75) / Block (P>=0.75)",
+      "Operational Action": "Production Transaction Routing"
+    }
+  ],
+  "auto_approve_rate_pct": 98.12,
+  "manual_review_rate_pct": 1.03,
+  "auto_block_rate_pct": 0.85,
+  "total_fraud_interception_pct": 35.92,
+  "version": "v1.0"
+}

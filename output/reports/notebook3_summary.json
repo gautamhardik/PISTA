@@ -1,0 +1,17 @@
+{
+  "notebook": "03_baseline_fraud_modeling_and_benchmarking.ipynb",
+  "champion_model": "LightGBM (Tuned)",
+  "challenger_model": "RiskGuard Heterogeneous Ensemble Blend",
+  "validation_roc_auc": 0.913,
+  "validation_pr_auc": 0.545,
+  "validation_f1_tau50": 0.3854,
+  "optimal_f1_threshold": 0.8,
+  "optimal_f1_score": 0.5257,
+  "challenger_roc_auc": 0.9151,
+  "challenger_pr_auc": 0.5413,
+  "total_features_used": 492,
+  "training_transactions": 472006,
+  "validation_transactions": 118534,
+  "test_transactions": 506691,
+  "gate_status": "BASELINE_BENCHMARK_APPROVED"
+}

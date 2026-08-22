@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Ultra-Premium Obsidian Foundation */
+  --bg-primary: #07080a;
+  --bg-secondary: rgba(14, 17, 23, 0.75);
+  --bg-tertiary: rgba(22, 27, 36, 0.85);
+  --bg-card: rgba(15, 19, 26, 0.65);
+  --bg-card-hover: rgba(22, 28, 38, 0.85);
+
+  /* Linear-Style Micro-Borders */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-highlight: rgba(255, 255, 255, 0.15);
+  --border-razor: rgba(51, 149, 255, 0.35);
+
+  /* High-Contrast Typographic Hierarchy */
+  --text-primary: #ffffff;
+  --text-secondary: rgba(240, 244, 255, 0.8);
+  --text-muted: rgba(240, 244, 255, 0.5);
+
+  /* Electric Royal Blue & Chartreuse Signal Accent */
+  --razor-blue: #3395ff;
+  --razor-blue-glow: rgba(51, 149, 255, 0.45);
+  --razor-indigo: #6366f1;
+  --chartreuse-accent: #C7F36B;
+  --chartreuse-glow: rgba(199, 243, 107, 0.35);
+
+  /* Strict Semantic Risk Indicators */
+  --risk-green: #10b981;
+  --risk-green-glow: rgba(16, 185, 129, 0.4);
+  --risk-amber: #f59e0b;
+  --risk-amber-glow: rgba(245, 158, 11, 0.4);
+  --risk-red: #f43f5e;
+  --risk-red-glow: rgba(244, 63, 94, 0.45);
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans), "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.015em;
+}
+
+/* Monospace Telemetry & Figures */
+code, kbd, samp, pre, .font-mono {
+  font-family: var(--font-mono), "JetBrains Mono", "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  letter-spacing: -0.03em;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(51, 149, 255, 0.2); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(51, 149, 255, 0.5); }
+
+/* Selection */
+::selection { background: rgba(199, 243, 107, 0.35); color: #07080a; }
+
+/* Focus Rings */
+*:focus-visible {
+  outline: 2px solid var(--razor-blue);
+  outline-offset: 2px;
+  box-shadow: 0 0 16px rgba(51, 149, 255, 0.5);
+}
+
+/* Glassmorphism Card System with Radiant Glow Aura */
+.card-surface {
+  background: linear-gradient(135deg, rgba(20, 26, 38, 0.65) 0%, rgba(10, 14, 22, 0.75) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 16px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.45), 0 0 20px -2px rgba(51, 149, 255, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-surface:hover {
+  border-color: rgba(51, 149, 255, 0.45);
+  box-shadow: 0 16px 40px -4px rgba(0, 0, 0, 0.6), 0 0 35px -2px rgba(51, 149, 255, 0.28), 0 0 70px -10px rgba(99, 102, 241, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Vibrant Atmospheric Glows */
+.glow-razor {
+  box-shadow: 0 0 35px rgba(51, 149, 255, 0.45), 0 0 85px rgba(99, 102, 241, 0.25), 0 0 120px rgba(51, 149, 255, 0.12);
+}
+
+.glow-chartreuse {
+  box-shadow: 0 0 28px rgba(199, 243, 107, 0.45), 0 0 65px rgba(199, 243, 107, 0.2);
+}
+
+.glow-emerald {
+  box-shadow: 0 0 32px rgba(16, 185, 129, 0.4), 0 0 75px rgba(16, 185, 129, 0.18);
+}
+
+.glow-amber {
+  box-shadow: 0 0 32px rgba(245, 158, 11, 0.4), 0 0 75px rgba(245, 158, 11, 0.18);
+}
+
+.glow-crimson {
+  box-shadow: 0 0 36px rgba(244, 63, 94, 0.45), 0 0 85px rgba(244, 63, 94, 0.22);
+}
+
+/* Particle Canvas */
+.particle-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particle-canvas { display: none; }
+  .card-surface:hover { transform: none; }
+}

@@ -1,0 +1,15 @@
+{
+  "feature_version": "v1.0",
+  "total_features": 490,
+  "engineered_features_count": 57,
+  "raw_features_count": 433,
+  "causal_historical_features": 29,
+  "rolling_window_features": 5,
+  "serving_online_available": 490,
+  "target_dependent_features": 0,
+  "temporal_order_verified": true,
+  "causal_unit_tests_verified": true,
+  "schema_parity_verified": true,
+  "artifacts_written": true,
+  "feature_store_status": "READY_FOR_MODELING"
+}

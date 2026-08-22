@@ -1,0 +1,28 @@
+{
+  "model_name": "RiskGuard-Tuned-LightGBM-Champion",
+  "model_version": "1.0.0",
+  "framework": "LightGBM",
+  "total_features": 492,
+  "validation_metrics": {
+    "pr_auc": 0.545,
+    "roc_auc": 0.913,
+    "f1_score_tau50": 0.3854,
+    "optimal_f1_score": 0.8,
+    "calibrated_brier_score": 0.0234
+  },
+  "challenger_metrics": {
+    "model_name": "RiskGuard-Heterogeneous-Ensemble-Blend",
+    "pr_auc": 0.5413,
+    "roc_auc": 0.9151
+  },
+  "decision_policy": {
+    "tau_review": 0.25,
+    "tau_block": 0.75,
+    "auto_approve_rate_pct": 98.12,
+    "manual_review_rate_pct": 1.03,
+    "auto_block_rate_pct": 0.85,
+    "fraud_interception_efficiency_pct": 35.92
+  },
+  "status": "PRODUCTION_ACTIVE",
+  "export_timestamp_utc": "2026-08-21T18:16:24.382183+00:00"
+}
