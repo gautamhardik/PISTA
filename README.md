@@ -158,6 +158,17 @@ flowchart TD
 * **Feature Dimensions**: 394 raw columns expanded to 492 engineered features.
 * **Evaluation Strategy**: Chronological out-of-time validation split (training on earlier periods, validating on the final 118,534 transactions to prevent temporal leakage).
 
+#### Dataset Acquisition & Setup
+The raw training data is sourced directly from the Kaggle IEEE-CIS Fraud Detection benchmark:
+```bash
+# 1. Download dataset via Kaggle CLI
+kaggle competitions download -c ieee-fraud-detection -p Data/raw/
+
+# 2. Extract archives into raw data folder
+unzip -q Data/raw/ieee-fraud-detection.zip -d Data/raw/
+# Target files: train_transaction.csv, train_identity.csv, test_transaction.csv, test_identity.csv
+```
+
 ---
 
 ## 8. Reproducible Notebook Suite
@@ -417,15 +428,17 @@ PISTA/
 ├── docs/                              # Visual showcase assets
 │   └── images/
 │
-└── Data/                              # Dataset acquisition guide
-    └── README.md
+└── Data/                              # Dataset storage (raw, processed, features)
+    ├── raw/
+    ├── processed/
+    └── features/
 ```
 
 ---
 
 ## 20. Reproducibility Checklist
 
-- [x] **Dataset Guide Available**: Documented in [`Data/README.md`](file:///c:/Users/hiten/Documents/RP/Data/README.md).
+- [x] **Dataset Ingestion Protocol**: Fully documented in Section 7 (Kaggle IEEE-CIS CLI).
 - [x] **Notebook 01 Executed**: EDA, distributions, missingness patterns, and identity availability analysis.
 - [x] **Notebook 02 Executed**: 492-feature causal engineering across 10 families.
 - [x] **Notebook 03 Executed**: Multi-model benchmarking (LightGBM, XGBoost, CatBoost, Blend).
