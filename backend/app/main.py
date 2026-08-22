@@ -13,12 +13,12 @@ setup_logging()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
-    logger.info("Initializing RiskGuard Backend Service...")
+    logger.info("Initializing PISTA Backend Service...")
     init_db()
     # Model artifacts loaded at module level in model_service
     yield
     # Shutdown
-    logger.info("Shutting down RiskGuard Backend Service.")
+    logger.info("Shutting down PISTA Backend Service.")
 
 app = FastAPI(
     title=settings.PROJECT_NAME,

@@ -189,8 +189,6 @@ def test_webhook_fast_200_and_idempotency():
 
 def test_razorpay_adapter_scientific_mapping():
     """Verify feature transformations and 492-feature representation."""
-    model_service.load_artifacts()
-    
     txn_input = razorpay_adapter.to_canonical_transaction(
         amount_paise=100000, # ₹1,000.00 -> $12.05 USD
         payment_data={

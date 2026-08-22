@@ -1,5 +1,5 @@
 {
-  "model_name": "RiskGuard-Tuned-LightGBM-Champion",
+  "model_name": "PISTA-Tuned-LightGBM-Champion",
   "model_version": "1.0.0",
   "framework": "LightGBM",
   "total_features": 492,

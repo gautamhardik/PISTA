@@ -2,7 +2,7 @@ import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "RiskGuard Production Fraud Decision API"
+    PROJECT_NAME: str = "PISTA Transaction Intelligence API"
     VERSION: str = "1.0.0"
     API_V1_PREFIX: str = "/api/v1"
     
@@ -25,12 +25,15 @@ class Settings(BaseSettings):
     TAU_BLOCK: float = 0.75
     
     # Razorpay Test Mode Credentials
-    RAZORPAY_KEY_ID: str = "rzp_test_TShUcPwAvvFwoz"
-    RAZORPAY_KEY_SECRET: str = "JrJZ6NqeH9QvysbWxVoTjxGi"
-    RAZORPAY_WEBHOOK_SECRET: str = "rzp_webhook_secret_riskguard_2026"
+    RAZORPAY_KEY_ID: str = os.getenv("RAZORPAY_KEY_ID", "rzp_test_placeholder")
+    RAZORPAY_KEY_SECRET: str = os.getenv("RAZORPAY_KEY_SECRET", "placeholder_secret")
+    RAZORPAY_WEBHOOK_SECRET: str = os.getenv("RAZORPAY_WEBHOOK_SECRET", "placeholder_webhook_secret")
     
-    # Database
-    DATABASE_URL: str = "sqlite:///./riskguard_production.db"
+    # Database (Default: local SQLite fallback, override via DATABASE_URL)
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./riskguard_production.db")
+    
+    # CORS
+    ALLOWED_ORIGINS: list[str] = ["*"]
 
     model_config = SettingsConfigDict(
         env_file=os.path.join(BASE_DIR, ".env"),

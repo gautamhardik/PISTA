@@ -9,6 +9,7 @@ from app.services.model_service import model_service
 from app.services.preprocessing_service import preprocessing_service
 from app.services.risk_service import risk_service
 from app.services.explanation_service import explanation_service
+from app.core.logging import logger
 from app.core.database import get_session
 from app.db.repositories import TransactionRepository, RiskAssessmentRepository, CaseRepository
 
@@ -24,16 +25,16 @@ async def predict_transaction(txn: TransactionInput, session: Session = Depends(
     4. Extracts top SHAP local risk factor attributions.
     5. Persists the transaction, risk assessment, and case record in the relational database.
     """
-    t_start = time.time()
+    t_start = time.perf_counter()
     
     try:
         # Preprocess
         df_features = preprocessing_service.transform_transaction(txn)
         
         # Inference
-        t_infer_start = time.time()
+        t_infer_start = time.perf_counter()
         raw_prob = model_service.predict_raw(df_features)
-        infer_latency_ms = (time.time() - t_infer_start) * 1000.0
+        infer_latency_ms = (time.perf_counter() - t_infer_start) * 1000.0
         
         # Calibration & Decision
         calibrated_prob = model_service.calibrate_probability(raw_prob)
@@ -42,7 +43,7 @@ async def predict_transaction(txn: TransactionInput, session: Session = Depends(
         # Explainability
         explanation = explanation_service.explain_transaction(df_features, risk.risk_level)
         
-        total_latency_ms = (time.time() - t_start) * 1000.0
+        total_latency_ms = (time.perf_counter() - t_start) * 1000.0
         txn_uuid = str(uuid.uuid4())[:8]
 
         model_name = model_service.metadata.get("model_name", "RiskGuard-Tuned-LightGBM-Champion")

@@ -1,9 +1,12 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Text, ForeignKey, CheckConstraint
 from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
+
+def get_utc_now():
+    return datetime.now(timezone.utc)
 
 class TransactionRecord(Base):
     __tablename__ = "transactions"
@@ -21,7 +24,7 @@ class TransactionRecord(Base):
     card_type = Column(String(32), nullable=True)
     email = Column(String(128), nullable=True)
     device_type = Column(String(32), nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=get_utc_now, nullable=False)
 
     # Relationships
     payments = relationship("PaymentRecord", back_populates="transaction", cascade="all, delete-orphan")
@@ -40,8 +43,8 @@ class PaymentRecord(Base):
     amount_paise = Column(Integer, nullable=False)
     currency = Column(String(10), default="INR", nullable=False)
     payment_method = Column(String(32), nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=get_utc_now, nullable=False)
+    updated_at = Column(DateTime, default=get_utc_now, onupdate=get_utc_now, nullable=False)
 
     # Relationships
     transaction = relationship("TransactionRecord", back_populates="payments")
@@ -61,12 +64,12 @@ class RiskAssessmentRecord(Base):
     decision = Column(String(20), nullable=False) # LEGITIMATE, SUSPICIOUS, FRAUD
     action = Column(String(20), nullable=False) # APPROVE, REVIEW, BLOCK
     policy_rule = Column(String(255), nullable=False)
-    model_name = Column(String(64), default="RiskGuard-Tuned-LightGBM-Champion", nullable=False)
+    model_name = Column(String(64), default="PISTA-Tuned-LightGBM-Champion", nullable=False)
     model_version = Column(String(16), default="1.0.0", nullable=False)
     top_factors_json = Column(Text, nullable=True)
     inference_latency_ms = Column(Float, nullable=False)
     total_latency_ms = Column(Float, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=get_utc_now, nullable=False)
 
     # Relationships
     transaction = relationship("TransactionRecord", back_populates="risk_assessments")
@@ -95,8 +98,8 @@ class CaseRecord(Base):
     resolution = Column(String(64), nullable=True) # confirmed_legitimate, confirmed_fraud, false_positive, customer_verified
     investigator_note = Column(Text, nullable=True)
     resolved_at = Column(DateTime, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=get_utc_now, nullable=False)
+    updated_at = Column(DateTime, default=get_utc_now, onupdate=get_utc_now, nullable=False)
 
     # Relationships
     transaction = relationship("TransactionRecord", back_populates="cases")
@@ -112,7 +115,7 @@ class WebhookEventRecord(Base):
     status = Column(String(32), default="received", nullable=False) # received, processed, ignored_duplicate
     processed = Column(Boolean, default=False, nullable=False)
     payload_json = Column(Text, nullable=False)
-    received_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    received_at = Column(DateTime, default=get_utc_now, nullable=False)
     processed_at = Column(DateTime, nullable=True)
 
 class CaseAuditRecord(Base):
@@ -126,5 +129,5 @@ class CaseAuditRecord(Base):
     actor = Column(String(64), default="Investigator", nullable=False)
     reason = Column(String(128), nullable=True)
     note = Column(Text, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=get_utc_now, nullable=False)
 

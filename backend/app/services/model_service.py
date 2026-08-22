@@ -31,7 +31,12 @@ class ModelService:
                 with open(settings.FEATURE_SCHEMA_PATH, "r", encoding="utf-8") as f:
                     self.feature_schema = json.load(f)
                     self.feature_order = self.feature_schema.get("feature_order", [])
-                logger.info(f"Loaded {len(self.feature_order)} feature schema definitions.")
+                    features_dict = self.feature_schema.get("features", {})
+                    self.categorical_cols = [
+                        col for col in self.feature_order 
+                        if features_dict.get(col, {}).get("is_categorical", False)
+                    ]
+                logger.info(f"Loaded {len(self.feature_order)} feature schema definitions ({len(self.categorical_cols)} categoricals).")
 
             # 3. Load Calibrator
             if os.path.exists(settings.CALIBRATOR_PATH):
@@ -56,9 +61,18 @@ class ModelService:
                     self.challenger_bundle = None
 
             self.is_ready = True
-            logger.info("RiskGuard ModelService is fully initialized and READY.")
+            logger.info("PISTA ModelService is fully initialized and READY.")
+            
+            # Warm up JIT predictor
+            try:
+                sample_row = pd.DataFrame([{col: np.nan for col in self.feature_order}])
+                for col in getattr(self, "categorical_cols", []):
+                    sample_row[col] = sample_row[col].astype('category')
+                self.predict_raw(sample_row)
+            except Exception:
+                pass
         except Exception as e:
-            logger.error(f"Failed to load RiskGuard model artifacts: {str(e)}")
+            logger.error(f"Failed to load PISTA model artifacts: {str(e)}")
             self.is_ready = False
             raise e
 
@@ -67,10 +81,10 @@ class ModelService:
         if not self.is_ready or self.model is None:
             raise RuntimeError("ModelService is not ready to serve predictions.")
         
-        # Ensure category dtypes
         df_eval = df_features[self.feature_order].copy()
-        for col in df_eval.select_dtypes(include=['object']).columns:
-            df_eval[col] = df_eval[col].astype('category')
+        for col in df_eval.columns:
+            if df_eval[col].dtype == object or isinstance(df_eval[col].dtype, pd.StringDtype):
+                df_eval[col] = df_eval[col].astype('category')
             
         preds = self.model.predict(df_eval, num_iteration=self.model.best_iteration)
         return float(preds[0])

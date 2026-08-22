@@ -5,7 +5,7 @@ router = APIRouter()
 
 @router.get("/health", summary="Basic Liveness Probe")
 async def health():
-    return {"status": "ok", "service": "RiskGuard Fraud Decision Engine"}
+    return {"status": "ok", "service": "PISTA Transaction Intelligence"}
 
 @router.get("/api/v1/health", summary="Service Readiness Probe")
 async def readiness():
@@ -14,5 +14,5 @@ async def readiness():
         "model_loaded": model_service.model is not None,
         "calibrator_loaded": model_service.calibrator is not None,
         "feature_count": len(model_service.feature_order),
-        "model_name": model_service.metadata.get("model_name", "RiskGuard Tuned LightGBM Champion")
+        "model_name": model_service.metadata.get("model_name", "PISTA Tuned LightGBM Champion")
     }
