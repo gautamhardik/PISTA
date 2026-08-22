@@ -30,7 +30,7 @@ PISTA is an end-to-end transaction intelligence and fraud decisioning platform. 
 
 ## 1. Demo & Visual Walkthrough
 
-![PISTA Overview Hero](docs/images/01_hero_overview.png)
+![PISTA Overview Hero](images/01_hero_overview.png)
 
 ### Video Demonstration
 * **Demonstration Scope**: Real-time transaction analysis, 492-feature inference, TreeSHAP attribution factor breakdown, interactive decision path, Razorpay test mode checkout flow, live PostgreSQL case triage queue with chronological audit logging, and dual-context analytics (118k cohort benchmark vs. live operations).
@@ -156,7 +156,7 @@ flowchart TD
 
 ## 8. Reproducible Notebook Suite
 
-The complete ML pipeline is fully reproducible through the sequential Jupyter notebooks in the [`Notebooks/`](file:///c:/Users/hiten/Documents/RP/Notebooks) directory:
+The complete ML pipeline is fully reproducible through the sequential Jupyter notebooks in the [`Notebooks/`](Notebooks) directory:
 
 | Notebook | Focus | Key Methodology | Primary Output Artifact |
 | :--- | :--- | :--- | :--- |
@@ -169,7 +169,8 @@ The complete ML pipeline is fully reproducible through the sequential Jupyter no
 ### Reproduction Commands
 ```bash
 # 1. Clone repository and navigate to workspace
-cd RP
+git clone https://github.com/gautamhardik/PISTA.git
+cd PISTA
 
 # 2. Set up Python virtual environment
 python -m venv venv
@@ -184,9 +185,6 @@ jupyter nbconvert --to notebook --execute Notebooks/02_feature_engineering_and_r
 jupyter nbconvert --to notebook --execute Notebooks/03_baseline_fraud_modeling_and_benchmarking.ipynb
 jupyter nbconvert --to notebook --execute Notebooks/04_model_evaluation_threshold_optimization.ipynb
 jupyter nbconvert --to notebook --execute Notebooks/05_model_explainability_and_risk_decisioning.ipynb
-
-# 5. Export production bundle to backend
-python package_backend_artifacts.py
 ```
 
 ---
@@ -253,42 +251,42 @@ TreeSHAP computes exact local additive feature attributions for every prediction
 ### 01. Transaction Risk Evaluation
 Submit 492-feature parameters directly or run test payment checkouts.
 
-![Transaction Analysis](docs/images/02_transaction_analysis.png)
+![Transaction Analysis](images/02_transaction_analysis.png)
 
 ---
 
 ### 02. Razorpay Gateway Test Mode Integration
 Simulate authentic payment authorization with server-side HMAC-SHA256 signature verification.
 
-![Razorpay Gateway](docs/images/03_razorpay_gateway.png)
+![Razorpay Gateway](images/03_razorpay_gateway.png)
 
 ---
 
 ### 03. Operational Analytics & Model Benchmarks
 Empirical fraud capture breakdown on the 118,534 cohort alongside real-time live telemetry.
 
-![Analytics Dashboard](docs/images/04_analytics_dashboard.png)
+![Analytics Dashboard](images/04_analytics_dashboard.png)
 
 ---
 
 ### 04. Investigations & Case Audit Trail
 Persistent operational triage queue hydrated from PostgreSQL with resolution logging.
 
-![Investigation Cases](docs/images/05_investigation_cases.png)
+![Investigation Cases](images/05_investigation_cases.png)
 
 ---
 
 ### 05. Model Lineage & Governance
 Model lineage from IEEE-CIS dataset to production champion metrics.
 
-![Model Governance](docs/images/06_model_governance.png)
+![Model Governance](images/06_model_governance.png)
 
 ---
 
 ### 06. System Health & Security Matrix
 Runtime health probes, environment parameters, and cryptographic invariants.
 
-![System & Security](docs/images/07_system_security.png)
+![System & Security](images/07_system_security.png)
 
 ---
 
