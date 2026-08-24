@@ -11,8 +11,7 @@
 [![LightGBM Champion](https://img.shields.io/badge/LightGBM-Champion_Booster-3395FF.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://lightgbm.readthedocs.io/)
 [![TreeSHAP](https://img.shields.io/badge/Explainability-TreeSHAP-C7F36B.svg?style=for-the-badge&labelColor=07080a)](https://shap.readthedocs.io/)
 [![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16_Alpine-4169E1.svg?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![Razorpay](https://img.shields.io/badge/Razorpay-Test_Mode_HMAC-0C2340.svg?style=for-the-badge&logo=razorpay&logoColor=white)](https://razorpay.com/)
-[![Tests Passing](https://img.shields.io/badge/Test_Suite-12%2F12_Passing_100%25-10B981.svg?style=for-the-badge&logo=pytest&logoColor=white)](file:///c:/Users/hiten/Documents/RP/backend/tests)
+[![Tests Passing](https://img.shields.io/badge/Test_Suite-12%2F12_Passing_100%25-10B981.svg?style=for-the-badge&logo=pytest&logoColor=white)](https://github.com/gautamhardik/PISTA/tree/main/backend/tests)
 
 <br/>
 
@@ -458,6 +457,28 @@ PISTA/
 
 ---
 
-## 22. Conclusion
+## 22. Engineering War Stories: What Broke at 2 AM & How We Got Out
+
+Building a sub-millisecond fraud decision engine under extreme class imbalance isn't just about training models—it's about surviving edge cases in production. Here are three real engineering hurdles and the solutions implemented:
+
+### 💥 War Story 1: The Raw-Body Webhook HMAC Signature Mismatch
+* **The Incident**: Razorpay webhook requests were throwing cryptographic signature verification errors (`400 Invalid HMAC Signature`) during automated end-to-end integration tests, even though the secret keys were verified to match.
+* **Root Cause**: FastAPI's standard request dependency was parsing the JSON body *before* computing the HMAC-SHA256 signature. In Python, dictionary key deserialization altered whitespace and key ordering, breaking raw byte-level hash parity.
+* **The Fix**: Captured `await request.body()` as an immutable raw byte stream directly in the middleware/route prior to any deserialization, feeding the unparsed raw bytes directly to `hmac.new(secret.encode(), raw_body, hashlib.sha256)`.
+
+### 💥 War Story 2: TreeSHAP Latency Bottleneck on 492 Feature Dimensions
+* **The Incident**: While the LightGBM booster scored in `< 1.0 ms`, running real-time TreeSHAP local explanations for all 492 dimensions on every incoming transaction spiked end-to-end API response time to **> 180 ms**—unacceptable for synchronous payment checkout flows.
+* **Root Cause**: Initializing the `shap.TreeExplainer` dynamically per request incurred overhead, and explaining dense full-dimensional arrays computed zero-contribution interactions across unpopulated categorical features.
+* **The Fix**: Pre-initialized a persistent singleton `TreeExplainer` at FastAPI startup lifecycle (`lifespan`), passed single-row NumPy arrays, and vectorized top-$k$ impact extraction (`np.argpartition`) to slash attribution calculation down to **~35 ms**.
+
+### 💥 War Story 3: The Overconfident Uncalibrated Boosting Score Trap
+* **The Incident**: Under 3.5% fraud incidence, standard binary cross-entropy loss produced boosting predictions that clustered heavily near 0 and 1. Raw scores between `0.60` and `0.70` were behaving erratically—some represented only 15% true risk, causing massive false positive spikes and declining legitimate transactions.
+* **Root Cause**: Tree-based gradient boosting optimizes ranking (AUC), not calibrated posterior probabilities $P(Y=1|X)$.
+* **The Fix**: Embedded a post-hoc **Isotonic Regression Calibrator** trained on held-out out-of-time validation folds ($Brier = 0.0234$). This transformed raw logits into mathematically sound posterior probabilities, allowing reliable tri-state routing thresholds ($\tau_{\text{review}} = 0.25$, $\tau_{\text{block}} = 0.75$).
+
+---
+
+## 23. Conclusion
 
 PISTA demonstrates that transaction fraud prevention requires more than just training a classifier—it requires a complete operational system spanning **rigorous feature engineering**, **sub-millisecond inference**, **calibrated posterior probabilities**, **interpretable model attribution**, **tri-state policy execution**, and **immutable audit logging**.
+
