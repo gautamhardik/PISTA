@@ -34,6 +34,9 @@ export default function AnalyzePage() {
   const [rEmail, setREmail] = useState<string>("gmail.com");
   const [deviceType, setDeviceType] = useState<string>("desktop");
 
+  // Optional additional features from selected preset
+  const [additionalFeatures, setAdditionalFeatures] = useState<Record<string, any>>({});
+
   const buildPayload = (): TransactionInput => ({
     TransactionAmt: parseFloat(amount) || 150.0,
     ProductCD: productCd,
@@ -44,6 +47,7 @@ export default function AnalyzePage() {
     P_emaildomain: pEmail,
     R_emaildomain: rEmail,
     DeviceType: deviceType,
+    additional_features: additionalFeatures,
   });
 
   const handleAnalyzeDirect = async (e: React.FormEvent) => {
@@ -107,8 +111,16 @@ export default function AnalyzePage() {
               razorpay_signature: response.razorpay_signature,
               customer_metadata: {
                 email: pEmail,
-                device: deviceType,
-                card_network: card4,
+                device_type: deviceType,
+                TransactionAmt: parseFloat(amount) || 150.0,
+                card1: parseInt(card1) || 13926,
+                card4: card4,
+                card6: card6,
+                addr1: parseFloat(addr1) || 315,
+                ProductCD: productCd,
+                P_emaildomain: pEmail,
+                R_emaildomain: rEmail,
+                additional_features: additionalFeatures,
               },
             });
             dispatch({ type: "SET_PREDICTION", payload: verification });
@@ -143,77 +155,99 @@ export default function AnalyzePage() {
     }
   };
 
-  const applyPreset = (preset: "standard" | "high_risk" | "micropay") => {
-    if (preset === "standard") {
-      setAmount("150.00");
-      setProductCd("W");
-      setCard1("13926");
-      setCard4("visa");
-      setCard6("credit");
-      setAddr1("315");
-      setPEmail("gmail.com");
-      setREmail("gmail.com");
-      setDeviceType("desktop");
-    } else if (preset === "high_risk") {
-      setAmount("4850.00");
-      setProductCd("H");
-      setCard1("9999");
-      setCard4("discover");
-      setCard6("credit");
-      setAddr1("123");
-      setPEmail("protonmail.com");
-      setREmail("anonymous.org");
-      setDeviceType("mobile");
-    } else if (preset === "micropay") {
-      setAmount("12.50");
-      setProductCd("C");
-      setCard1("4462");
-      setCard4("mastercard");
-      setCard6("debit");
-      setAddr1("299");
-      setPEmail("yahoo.com");
-      setREmail("yahoo.com");
-      setDeviceType("desktop");
+  const applyPreset = (presetKey: "standard" | "high_risk" | "review_vector") => {
+    try {
+      const presetsData = require("@/lib/presets.json");
+      const preset = presetsData[presetKey];
+      if (preset && preset.data) {
+        const d = preset.data;
+        setAmount(String(d.TransactionAmt));
+        setProductCd(d.ProductCD || "W");
+        setCard1(String(d.card1 || "13926"));
+        setCard4(d.card4 || "visa");
+        setCard6(d.card6 || "credit");
+        setAddr1(String(d.addr1 || "315"));
+        setPEmail(d.P_emaildomain || "gmail.com");
+        setREmail(d.R_emaildomain || "gmail.com");
+        setDeviceType(d.DeviceType || "desktop");
+        setAdditionalFeatures(d.additional_features || {});
+      }
+    } catch (e) {
+      console.error("Failed to load preset:", e);
     }
   };
 
   return (
-    <div className="relative min-h-screen px-8 lg:px-20 py-12 max-w-4xl mx-auto overflow-hidden">
-      <ParticleField mode="scan" className="opacity-40" />
+    <div className="relative min-h-screen px-6 lg:px-16 py-10 max-w-5xl mx-auto overflow-hidden">
+      <ParticleField mode="scan" className="opacity-45" />
 
-      {/* Multi-Layer Ambient Background Glows */}
+      {/* Atmospheric dynamic gradient spotlights */}
       <div className="absolute top-0 right-1/4 w-[600px] h-[350px] bg-gradient-to-bl from-[#3395ff]/15 via-[#C7F36B]/08 to-transparent rounded-full blur-[140px] pointer-events-none" />
 
       <div className="relative z-10">
-        <PageHeader
-          title="Transaction Risk Evaluation"
-          description="Submit real-time payment telemetry across 492 engineered features for instant calibrated scoring and TreeSHAP attribution"
-        />
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+          <div className="cursor-default group">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#3395ff]/15 text-[#3395ff] border border-[#3395ff]/30 font-bold uppercase tracking-wider group-hover:bg-[#3395ff]/25 group-hover:shadow-[0_0_12px_rgba(51,149,255,0.35)] transition-all">
+                Telemetry Studio
+              </span>
+              <span className="text-xs font-mono text-zinc-500 group-hover:text-zinc-300 transition-colors">• 492 Feature Store</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white font-heading group-hover:text-[#C7F36B] transition-colors">
+              Transaction Risk Simulator
+            </h1>
+          </div>
+          <p className="text-xs font-mono text-zinc-400 hover:text-zinc-200 max-w-xs leading-relaxed transition-colors cursor-default">
+            Configure transaction vectors or load live attack patterns for sub-millisecond scoring.
+          </p>
+        </div>
 
-        {/* Quick Presets Bar */}
-        <div className="flex flex-wrap items-center gap-2 mb-6 p-2 rounded-xl bg-[#0f131a]/85 border border-white/[0.08] backdrop-blur-xl">
-          <span className="text-xs font-mono text-zinc-400 px-2">Telemetry Presets:</span>
-          <button
-            type="button"
-            onClick={() => applyPreset("standard")}
-            className="px-3 py-1 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs font-mono text-zinc-200 transition-colors cursor-pointer"
-          >
-            01. Standard Retail ($150)
-          </button>
-          <button
-            type="button"
-            onClick={() => applyPreset("high_risk")}
-            className="px-3 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-xs font-mono text-rose-300 transition-colors cursor-pointer"
-          >
-            02. High Risk Vector ($4,850)
-          </button>
-          <button
-            type="button"
-            onClick={() => applyPreset("micropay")}
-            className="px-3 py-1 rounded-lg bg-[#C7F36B]/10 hover:bg-[#C7F36B]/20 border border-[#C7F36B]/30 text-xs font-mono text-[#C7F36B] transition-colors cursor-pointer"
-          >
-            03. Micropayment ($12.50)
-          </button>
+        {/* Quick Presets Bar: Interactive Tactical Selector */}
+        <div className="mb-6 p-3 rounded-2xl bg-[#0f131a]/90 border border-white/[0.09] backdrop-blur-2xl shadow-xl">
+          <div className="flex items-center justify-between mb-2 px-1 cursor-default group">
+            <span className="text-[11px] font-mono text-zinc-400 group-hover:text-zinc-200 font-medium uppercase tracking-wider flex items-center gap-1.5 transition-colors">
+              <Sparkles className="w-3.5 h-3.5 text-[#C7F36B] group-hover:rotate-12 transition-transform" />
+              <span>Simulate Attack Vectors & Safe Baselines</span>
+            </span>
+            <span className="text-[10px] font-mono text-zinc-500 group-hover:text-[#C7F36B] transition-colors">1-Click Injection</span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <button
+              type="button"
+              onClick={() => applyPreset("standard")}
+              className="p-2.5 rounded-xl bg-white/[0.03] hover:bg-emerald-500/10 border border-white/[0.07] hover:border-emerald-500/30 hover:-translate-y-0.5 text-left transition-all duration-200 cursor-pointer group"
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-bold text-white group-hover:text-emerald-300 font-heading transition-colors">Standard Retail</span>
+                <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.8)] group-hover:scale-125 transition-transform" />
+              </div>
+              <p className="text-[11px] font-mono text-zinc-400 group-hover:text-zinc-200 transition-colors">$107.95 • Verified Visa Credit</p>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => applyPreset("high_risk")}
+              className="p-2.5 rounded-xl bg-white/[0.03] hover:bg-rose-500/10 border border-white/[0.07] hover:border-rose-500/30 hover:-translate-y-0.5 text-left transition-all duration-200 cursor-pointer group"
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-bold text-white group-hover:text-rose-300 font-heading transition-colors">High Risk Velocity Attack</span>
+                <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.8)] group-hover:scale-125 transition-transform" />
+              </div>
+              <p className="text-[11px] font-mono text-zinc-400 group-hover:text-zinc-200 transition-colors">$422.50 • Disposable Email & Proxy</p>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => applyPreset("review_vector")}
+              className="p-2.5 rounded-xl bg-white/[0.03] hover:bg-amber-500/10 border border-white/[0.07] hover:border-amber-500/30 hover:-translate-y-0.5 text-left transition-all duration-200 cursor-pointer group"
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-bold text-white group-hover:text-amber-300 font-heading transition-colors">Suspicious Triage Vector</span>
+                <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.8)] group-hover:scale-125 transition-transform" />
+              </div>
+              <p className="text-[11px] font-mono text-zinc-400 group-hover:text-zinc-200 transition-colors">$136.95 • Cross-border Mismatch</p>
+            </button>
+          </div>
         </div>
 
         {error && (
@@ -225,15 +259,15 @@ export default function AnalyzePage() {
 
         {loading ? (
           <div className="card-surface p-12 text-center backdrop-blur-2xl bg-[#0f131a]/95 border-white/[0.12] shadow-2xl">
-            <div className="w-12 h-12 rounded-full bg-[#C7F36B]/10 border border-[#C7F36B]/40 flex items-center justify-center mx-auto mb-4 animate-pulse shadow-[0_0_24px_rgba(199,243,107,0.3)]">
-              <Loader2 className="w-6 h-6 text-[#C7F36B] animate-spin" />
+            <div className="w-14 h-14 rounded-2xl bg-[#C7F36B]/10 border border-[#C7F36B]/40 flex items-center justify-center mx-auto mb-4 animate-pulse shadow-[0_0_30px_rgba(199,243,107,0.35)]">
+              <Loader2 className="w-7 h-7 text-[#C7F36B] animate-spin" />
             </div>
-            <h3 className="text-sm font-bold text-white font-sans mb-1">Evaluating Transaction</h3>
-            <p className="text-xs font-mono text-[#C7F36B]">{analysisStep || "Running inference pipeline…"}</p>
+            <h3 className="text-base font-bold text-white font-display mb-1.5">Evaluating Transaction</h3>
+            <p className="text-xs font-mono text-[#C7F36B] tracking-wide">{analysisStep || "Running inference pipeline…"}</p>
             
             {/* Progress bar visual indicator */}
-            <div className="w-48 h-1 bg-white/[0.06] rounded-full mx-auto mt-4 overflow-hidden">
-              <div className="w-full h-full bg-gradient-to-r from-[#3395ff] to-[#C7F36B] animate-[pulse_1s_ease-in-out_infinite]" />
+            <div className="w-56 h-1.5 bg-white/[0.06] rounded-full mx-auto mt-5 overflow-hidden">
+              <div className="w-full h-full bg-gradient-to-r from-[#3395ff] via-[#6366f1] to-[#C7F36B] animate-[pulse_1s_ease-in-out_infinite]" />
             </div>
           </div>
         ) : (

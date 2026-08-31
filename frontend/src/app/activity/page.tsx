@@ -29,7 +29,7 @@ export default function ActivityPage() {
   }, []);
 
   return (
-    <div className="relative min-h-screen px-12 lg:px-20 py-12 max-w-5xl overflow-hidden">
+    <div className="relative min-h-screen px-6 lg:px-16 py-10 max-w-5xl mx-auto overflow-hidden">
       {/* Contextual Live Stream Particle Activity */}
       <ParticleField mode="activity" className="opacity-45" />
 
@@ -37,23 +37,30 @@ export default function ActivityPage() {
       <div className="absolute top-0 left-1/4 w-[650px] h-[350px] bg-gradient-to-br from-[#10b981]/12 via-[#3395ff]/08 to-transparent rounded-full blur-[150px] pointer-events-none" />
 
       <div className="relative z-10">
-        <div className="flex items-center justify-between mb-8">
-          <PageHeader
-            title="Activity Stream"
-            description="Persistent operational telemetry of real-time fraud scoring events and policy routing"
-          />
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold uppercase tracking-wider">
+                Live Feed
+              </span>
+              <span className="text-xs font-mono text-zinc-500">• Continuous Ingestion</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white font-display">
+              Operational Activity Stream
+            </h1>
+          </div>
           <div className="flex items-center gap-3">
             <button
               onClick={loadActivity}
               disabled={loading}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:border-[#3395ff]/40 text-xs font-mono text-zinc-300 hover:text-white transition-all backdrop-blur-md shadow-sm"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:border-[#3395ff]/40 text-xs font-mono text-zinc-300 hover:text-white transition-all backdrop-blur-md shadow-sm cursor-pointer hover:bg-white/[0.08]"
             >
               <RefreshCw className={cn("w-3.5 h-3.5 text-[#3395ff]", loading && "animate-spin")} />
-              <span>Refresh</span>
+              <span>Sync Stream</span>
             </button>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold uppercase tracking-wider backdrop-blur-md shadow-[0_0_12px_rgba(16,185,129,0.2)]">
+            <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold uppercase tracking-wider backdrop-blur-md shadow-[0_0_12px_rgba(16,185,129,0.2)]">
               <Radio className="w-3.5 h-3.5 animate-pulse text-emerald-400" />
-              <span>PostgreSQL Sync</span>
+              <span>PostgreSQL 16 Live</span>
             </div>
           </div>
         </div>

@@ -349,13 +349,37 @@ Runtime health probes, environment parameters, and cryptographic invariants.
 
 > **Frontend (UI only)** is live publicly at **[https://frontend-sigma-vert-50.vercel.app](https://frontend-sigma-vert-50.vercel.app)** — no setup required to view all 8 routes.
 >
-> **Full end-to-end** (ML inference + Razorpay + PostgreSQL) requires the local Docker stack below.
+> **Full end-to-end** (ML inference + Razorpay + PostgreSQL) can be launched in one click using the provided startup scripts or via Docker.
 
-### Prerequisites
+### Option A: 1-Click Instant Launch (Recommended for Local Dev)
+
+The repository provides automated 1-click launch scripts that start both the FastAPI backend and Next.js frontend, verify health endpoints, and automatically launch your browser:
+
+* **Windows (Batch / Double-Click)**:
+  ```cmd
+  run.bat
+  ```
+  *(Or double-click `run.bat` in File Explorer)*
+
+* **PowerShell (Unified Job Manager & Live Logs)**:
+  ```powershell
+  .\run.ps1
+  ```
+
+* **Linux / macOS / Git Bash**:
+  ```bash
+  chmod +x run.sh
+  ./run.sh
+  ```
+
+---
+
+### Option B: One-Command Production Launch (Docker Compose)
+
+#### Prerequisites
 * [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running.
 * Git installed.
 
-### One-Command Production Launch
 ```bash
 # 1. Clone the repository
 git clone https://github.com/gautamhardik/PISTA.git
@@ -385,6 +409,23 @@ pista-frontend    Up
 
 ---
 
+### Option C: Manual Launch
+
+1. **Backend**:
+   ```bash
+   cd backend
+   pip install -r requirements.txt
+   python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+   ```
+2. **Frontend**:
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+
+---
+
 ## 18. Evaluator Quick Start (Step-by-Step Test Drive)
 
 1. Open **[http://localhost:3000/analyze](http://localhost:3000/analyze)**.
@@ -401,6 +442,9 @@ pista-frontend    Up
 PISTA/
 │
 ├── README.md                          # Master single-file documentation & walkthrough
+├── run.bat                            # 1-Click Windows launch script (Auto-opens browser)
+├── run.ps1                            # 1-Click PowerShell launch script with live job log streaming
+├── run.sh                             # 1-Click Bash launch script (Linux / macOS / Git Bash)
 ├── docker-compose.yml                 # Multi-container orchestration (Postgres + Backend + Frontend)
 ├── .gitignore                         # Security & dataset exclusion rules
 ├── .env.example                       # Environment configuration template

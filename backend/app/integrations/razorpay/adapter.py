@@ -58,32 +58,43 @@ class RazorpayTransactionAdapter:
         payment_data = payment_data or {}
         customer_data = customer_data or {}
 
-        # 1. Convert amount: paise -> INR -> USD (unit compatibility transformation)
+        # 1. Convert amount: Use explicit customer/preset amount if present, else convert paise -> INR -> USD
         amount_inr = amount_paise / 100.0
-        amount_usd = round(amount_inr * cls.INR_TO_USD_RATE, 2)
-        if amount_usd < 1.0:
-            amount_usd = 1.0
+        if customer_data.get("TransactionAmt"):
+            amount_usd = float(customer_data["TransactionAmt"])
+        else:
+            amount_usd = round(amount_inr * cls.INR_TO_USD_RATE, 2)
+            if amount_usd < 1.0:
+                amount_usd = 1.0
 
         # 2. Product type proxy mapping
-        method = payment_data.get("method", "card")
-        product_cd = "C" if method == "card" else "W"
+        product_cd = customer_data.get("ProductCD") or ("C" if payment_data.get("method") == "card" else "W")
 
         # 3. Card entity extraction
         card_obj = payment_data.get("card") or {}
-        card4 = (card_obj.get("network") or customer_data.get("card4") or "visa").lower()
-        card6 = (card_obj.get("type") or customer_data.get("card6") or "credit").lower()
+        card4 = (customer_data.get("card4") or card_obj.get("network") or "visa").lower()
+        card6 = (customer_data.get("card6") or card_obj.get("type") or "credit").lower()
         
         # 4. Email parsing
-        email = payment_data.get("email") or customer_data.get("email") or "customer@gmail.com"
-        email_domain = email.split("@")[-1] if "@" in email else "gmail.com"
+        email = customer_data.get("email") or payment_data.get("email") or "customer@gmail.com"
+        email_domain = customer_data.get("P_emaildomain") or (email.split("@")[-1] if "@" in email else "gmail.com")
 
-        # 5. Derived Integration Identifier: Synthetic Card Proxy
+        # 5. Derived Card ID: Preset ID takes priority over test gateway placeholder
         last4 = card_obj.get("last4")
-        card1_id = int(last4) * 10 if last4 and last4.isdigit() else 13926
+        if customer_data.get("card1"):
+            card1_id = int(customer_data.get("card1"))
+        elif last4 and last4.isdigit():
+            card1_id = int(last4) * 10
+        else:
+            card1_id = 13926
+
+        # 6. Additional Features from preset
+        additional_features = customer_data.get("additional_features", {})
 
         logger.info(
             f"Adapted Razorpay Payment -> INR: ₹{amount_inr:.2f} -> USD: ${amount_usd:.2f} | "
-            f"Network: {card4} | Type: {card6} | Domain: {email_domain} | ProxyCard: {card1_id}"
+            f"Network: {card4} | Type: {card6} | Domain: {email_domain} | Card1: {card1_id} | "
+            f"AdditionalFeatures: {len(additional_features)}"
         )
 
         return TransactionInput(
@@ -95,8 +106,10 @@ class RazorpayTransactionAdapter:
             addr1=customer_data.get("addr1", 315.0),
             addr2=customer_data.get("addr2", 87.0),
             P_emaildomain=email_domain,
+            R_emaildomain=customer_data.get("R_emaildomain", email_domain),
             DeviceType=customer_data.get("device_type", "desktop"),
-            DeviceInfo=payment_data.get("user_agent", "Mozilla/5.0")
+            DeviceInfo=payment_data.get("user_agent", "Mozilla/5.0"),
+            additional_features=additional_features
         )
 
 razorpay_adapter = RazorpayTransactionAdapter()

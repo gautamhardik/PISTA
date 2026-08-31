@@ -101,26 +101,41 @@ export default function ResultPage() {
           </div>
         </div>
 
-        <PageHeader
-          title="Risk Assessment & Decision Breakdown"
-          description="Real-time evaluation of calibrated posterior fraud risk, policy enforcement, and model-attributed TreeSHAP drivers"
-        />
+        <div className="flex items-center justify-between mb-8">
+          <div className="cursor-default group">
+            <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#C7F36B] font-bold block mb-1 group-hover:drop-shadow-[0_0_12px_rgba(199,243,107,0.6)] transition-all">
+              Autonomous Decisioning
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white font-display group-hover:text-[#C7F36B] transition-colors">
+              Risk Assessment & Attribution
+            </h1>
+          </div>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/analyze"
+              className="btn-action-primary inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-[#07080a]"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>New Simulation</span>
+            </Link>
+          </div>
+        </div>
 
         {/* Centerpiece Assessment Grid */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8">
           {/* Left: Calibrated Score Dial with dual-halo aura */}
-          <div className="md:col-span-5 card-surface p-8 flex flex-col items-center justify-center backdrop-blur-2xl bg-[#0f131a]/90 shadow-2xl border-white/[0.12] relative overflow-hidden">
+          <div className="md:col-span-5 card-surface p-8 flex flex-col items-center justify-center backdrop-blur-2xl bg-[#0f131a]/90 shadow-2xl border-white/[0.12] relative overflow-hidden group">
             <div className="absolute inset-0 bg-radial from-[#C7F36B]/10 to-transparent pointer-events-none" />
             <RiskScoreRing score={risk.risk_score} level={risk.risk_level} size={220} />
             
-            <div className="grid grid-cols-2 gap-4 w-full mt-6 pt-5 border-t border-white/[0.08] text-center font-mono relative z-10">
-              <div>
-                <span className="text-[11px] uppercase text-zinc-400 font-medium">Raw Probability</span>
-                <p className="text-base font-bold text-white mt-0.5">{(risk.raw_probability * 100).toFixed(2)}%</p>
+            <div className="grid grid-cols-2 gap-4 w-full mt-6 pt-5 border-t border-white/[0.08] text-center font-mono relative z-10 cursor-default">
+              <div className="group/item">
+                <span className="text-[11px] uppercase text-zinc-400 group-hover/item:text-zinc-200 font-medium transition-colors">Raw Probability</span>
+                <p className="text-base font-bold text-white mt-0.5 group-hover/item:text-zinc-100 transition-colors">{(risk.raw_probability * 100).toFixed(2)}%</p>
               </div>
-              <div>
-                <span className="text-[11px] uppercase text-zinc-400 font-medium">Calibrated Posterior</span>
-                <p className="text-base font-bold text-[#C7F36B] mt-0.5 drop-shadow-[0_0_10px_rgba(199,243,107,0.7)]">{(risk.calibrated_probability * 100).toFixed(2)}%</p>
+              <div className="group/item">
+                <span className="text-[11px] uppercase text-zinc-400 group-hover/item:text-[#C7F36B] font-medium transition-colors">Calibrated Posterior</span>
+                <p className="text-base font-bold text-[#C7F36B] mt-0.5 drop-shadow-[0_0_10px_rgba(199,243,107,0.7)] group-hover/item:scale-105 transition-transform">{(risk.calibrated_probability * 100).toFixed(2)}%</p>
               </div>
             </div>
           </div>
@@ -132,7 +147,7 @@ export default function ResultPage() {
                 Decision Outcome
               </span>
 
-              <div className={cn("p-4 rounded-xl border mt-3 mb-4 flex items-center justify-between backdrop-blur-md", currentDecision.bg, currentDecision.border, currentDecision.glow)}>
+              <div className={cn("p-4 rounded-xl border mt-3 mb-4 flex items-center justify-between backdrop-blur-md transition-all duration-300 hover:scale-[1.01]", currentDecision.bg, currentDecision.border, currentDecision.glow)}>
                 <div className="flex items-center gap-3">
                   <DecisionIcon className={cn("w-6 h-6", currentDecision.text)} />
                   <div>
@@ -145,28 +160,28 @@ export default function ResultPage() {
                 <ActionBadge action={decision.action} />
               </div>
 
-              <p className="text-sm text-zinc-300 leading-relaxed font-sans">
+              <p className="text-sm text-zinc-300 hover:text-white leading-relaxed font-sans transition-colors cursor-default">
                 {currentDecision.policyDesc}
               </p>
             </div>
 
             {/* Explicit 4-Layer Latency Breakdown */}
-            <div className="grid grid-cols-4 gap-2 pt-5 border-t border-white/[0.08] font-mono text-[11px]">
-              <div>
-                <span className="text-zinc-500 block text-[9px] uppercase">Model Inference</span>
-                <span className="text-white font-semibold">{inferenceMs < 1 ? "< 1.0 ms" : `${inferenceMs.toFixed(2)} ms`}</span>
+            <div className="grid grid-cols-4 gap-2 pt-5 border-t border-white/[0.08] font-mono text-[11px] cursor-default">
+              <div className="group hover:bg-white/[0.03] p-1.5 rounded-lg transition-colors">
+                <span className="text-zinc-500 group-hover:text-zinc-300 block text-[9px] uppercase transition-colors">Model Inference</span>
+                <span className="text-white group-hover:text-[#3395ff] font-semibold transition-colors">{inferenceMs < 1 ? "< 1.0 ms" : `${inferenceMs.toFixed(2)} ms`}</span>
               </div>
-              <div>
-                <span className="text-zinc-500 block text-[9px] uppercase">Feature Pipeline</span>
-                <span className="text-zinc-300 font-semibold">{featurePipelineMs.toFixed(1)} ms</span>
+              <div className="group hover:bg-white/[0.03] p-1.5 rounded-lg transition-colors">
+                <span className="text-zinc-500 group-hover:text-zinc-300 block text-[9px] uppercase transition-colors">Feature Pipeline</span>
+                <span className="text-zinc-300 group-hover:text-white font-semibold transition-colors">{featurePipelineMs.toFixed(1)} ms</span>
               </div>
-              <div>
-                <span className="text-zinc-500 block text-[9px] uppercase">SHAP Explanation</span>
-                <span className="text-zinc-300 font-semibold">{explanationMs.toFixed(1)} ms</span>
+              <div className="group hover:bg-white/[0.03] p-1.5 rounded-lg transition-colors">
+                <span className="text-zinc-500 group-hover:text-zinc-300 block text-[9px] uppercase transition-colors">SHAP Explanation</span>
+                <span className="text-zinc-300 group-hover:text-white font-semibold transition-colors">{explanationMs.toFixed(1)} ms</span>
               </div>
-              <div>
-                <span className="text-zinc-500 block text-[9px] uppercase">End-to-End</span>
-                <span className="text-emerald-400 font-semibold">{formatLatency(totalMs)}</span>
+              <div className="group hover:bg-white/[0.03] p-1.5 rounded-lg transition-colors">
+                <span className="text-zinc-500 group-hover:text-zinc-300 block text-[9px] uppercase transition-colors">End-to-End</span>
+                <span className="text-emerald-400 group-hover:drop-shadow-[0_0_8px_rgba(16,185,129,0.8)] font-semibold transition-all">{formatLatency(totalMs)}</span>
               </div>
             </div>
           </div>
@@ -191,32 +206,79 @@ export default function ResultPage() {
           </button>
 
           {showDecisionPath && (
-            <div className="p-6 pt-2 border-t border-white/[0.08] bg-[#07080a]/50">
-              <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 text-xs font-mono">
-                <div className="p-3 rounded-lg bg-white/[0.03] border border-white/[0.06]">
-                  <span className="text-zinc-500 block text-[10px]">STEP 1</span>
-                  <span className="text-white font-semibold">Payment Received</span>
-                  <p className="text-[11px] text-zinc-400 mt-1">Provider telemetry ingested</p>
+            <div className="p-6 pt-3 border-t border-white/[0.08] bg-[#07080a]/60">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider flex items-center gap-2">
+                  <span className="inline-block w-2 h-2 rounded-full bg-[#C7F36B] animate-ping" />
+                  Sequential Inference Pipeline Active
+                </span>
+                <span className="text-[10px] font-mono text-zinc-500">Hover or click any step to inspect telemetry state</span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 text-xs font-mono relative">
+                {/* Step 1 */}
+                <div className="p-3.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.08] hover:border-[#3395ff]/50 transition-all duration-300 hover:-translate-y-1 group cursor-pointer shadow-lg hover:shadow-[0_0_20px_rgba(51,149,255,0.2)]">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-zinc-500 group-hover:text-[#3395ff] block text-[10px] font-bold tracking-wider transition-colors">STEP 01</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#3395ff] shadow-[0_0_6px_rgba(51,149,255,0.8)]" />
+                  </div>
+                  <span className="text-white group-hover:text-[#3395ff] font-bold block text-xs transition-colors">Payment Ingested</span>
+                  <p className="text-[11px] text-zinc-400 group-hover:text-zinc-200 mt-1 transition-colors">HTTP Telemetry payload validated</p>
+                  <div className="mt-2.5 pt-2 border-t border-white/[0.06] text-[10px] text-zinc-500 group-hover:text-zinc-300">
+                    Status: <span className="text-emerald-400 font-semibold">200 OK</span>
+                  </div>
                 </div>
-                <div className="p-3 rounded-lg bg-white/[0.03] border border-white/[0.06]">
-                  <span className="text-zinc-500 block text-[10px]">STEP 2</span>
-                  <span className="text-white font-semibold">492-Feature Vector</span>
-                  <p className="text-[11px] text-zinc-400 mt-1">Single-pass array assembly</p>
+
+                {/* Step 2 */}
+                <div className="p-3.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.08] hover:border-[#3395ff]/50 transition-all duration-300 hover:-translate-y-1 group cursor-pointer shadow-lg hover:shadow-[0_0_20px_rgba(51,149,255,0.2)]">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-zinc-500 group-hover:text-[#3395ff] block text-[10px] font-bold tracking-wider transition-colors">STEP 02</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#3395ff] shadow-[0_0_6px_rgba(51,149,255,0.8)]" />
+                  </div>
+                  <span className="text-white group-hover:text-[#3395ff] font-bold block text-xs transition-colors">492-D Vectorizer</span>
+                  <p className="text-[11px] text-zinc-400 group-hover:text-zinc-200 mt-1 transition-colors">Single-pass causal feature assembly</p>
+                  <div className="mt-2.5 pt-2 border-t border-white/[0.06] text-[10px] text-zinc-500 group-hover:text-zinc-300">
+                    Dim: <span className="text-white font-semibold">492 floats</span>
+                  </div>
                 </div>
-                <div className="p-3 rounded-lg bg-white/[0.03] border border-white/[0.06]">
-                  <span className="text-zinc-500 block text-[10px]">STEP 3</span>
-                  <span className="text-white font-semibold">LightGBM Score</span>
-                  <p className="text-[11px] text-zinc-400 mt-1">Raw: {(risk.raw_probability * 100).toFixed(1)}%</p>
+
+                {/* Step 3 */}
+                <div className="p-3.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.08] hover:border-[#6366f1]/50 transition-all duration-300 hover:-translate-y-1 group cursor-pointer shadow-lg hover:shadow-[0_0_20px_rgba(99,102,241,0.2)]">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-zinc-500 group-hover:text-[#818cf8] block text-[10px] font-bold tracking-wider transition-colors">STEP 03</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#6366f1] shadow-[0_0_6px_rgba(99,102,241,0.8)]" />
+                  </div>
+                  <span className="text-white group-hover:text-[#818cf8] font-bold block text-xs transition-colors">LightGBM Booster</span>
+                  <p className="text-[11px] text-zinc-400 group-hover:text-zinc-200 mt-1 transition-colors">Raw Logits: {(risk.raw_probability * 100).toFixed(1)}%</p>
+                  <div className="mt-2.5 pt-2 border-t border-white/[0.06] text-[10px] text-zinc-500 group-hover:text-zinc-300">
+                    Latency: <span className="text-white font-semibold">{inferenceMs < 1 ? "< 1.0ms" : `${inferenceMs.toFixed(1)}ms`}</span>
+                  </div>
                 </div>
-                <div className="p-3 rounded-lg bg-white/[0.03] border border-white/[0.06]">
-                  <span className="text-zinc-500 block text-[10px]">STEP 4</span>
-                  <span className="text-[#C7F36B] font-semibold">Isotonic Calibrator</span>
-                  <p className="text-[11px] text-zinc-400 mt-1">Posterior: {(risk.calibrated_probability * 100).toFixed(1)}%</p>
+
+                {/* Step 4 */}
+                <div className="p-3.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.08] hover:border-[#C7F36B]/50 transition-all duration-300 hover:-translate-y-1 group cursor-pointer shadow-lg hover:shadow-[0_0_20px_rgba(199,243,107,0.2)]">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-zinc-500 group-hover:text-[#C7F36B] block text-[10px] font-bold tracking-wider transition-colors">STEP 04</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#C7F36B] shadow-[0_0_6px_rgba(199,243,107,0.8)]" />
+                  </div>
+                  <span className="text-[#C7F36B] group-hover:drop-shadow-[0_0_10px_rgba(199,243,107,0.7)] font-bold block text-xs transition-all">Isotonic Calibrator</span>
+                  <p className="text-[11px] text-zinc-400 group-hover:text-zinc-200 mt-1 transition-colors">Posterior: {(risk.calibrated_probability * 100).toFixed(1)}%</p>
+                  <div className="mt-2.5 pt-2 border-t border-white/[0.06] text-[10px] text-zinc-500 group-hover:text-zinc-300">
+                    Brier: <span className="text-[#C7F36B] font-semibold">0.0234</span>
+                  </div>
                 </div>
-                <div className="p-3 rounded-lg bg-[#C7F36B]/10 border border-[#C7F36B]/30">
-                  <span className="text-[#C7F36B] block text-[10px]">STEP 5</span>
-                  <span className="text-white font-semibold">{decision.action}</span>
-                  <p className="text-[11px] text-zinc-300 mt-1">{currentDecision.policyTitle}</p>
+
+                {/* Step 5 */}
+                <div className={cn("p-3.5 rounded-xl border transition-all duration-300 hover:-translate-y-1 group cursor-pointer shadow-lg", currentDecision.bg, currentDecision.border, currentDecision.glow)}>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-zinc-300 block text-[10px] font-bold tracking-wider">STEP 05 / VERDICT</span>
+                    <span className={cn("w-2 h-2 rounded-full animate-pulse", decision.action === 'BLOCK' ? 'bg-rose-500' : decision.action === 'REVIEW' ? 'bg-amber-400' : 'bg-emerald-400')} />
+                  </div>
+                  <span className={cn("font-extrabold block text-sm tracking-wide", currentDecision.text)}>{decision.action}</span>
+                  <p className="text-[11px] text-zinc-300 mt-1 font-sans font-medium">{currentDecision.policyTitle}</p>
+                  <div className="mt-2.5 pt-2 border-t border-white/[0.1] text-[10px] text-zinc-300">
+                    Triage: <span className="text-white font-semibold">Tri-State Routed</span>
+                  </div>
                 </div>
               </div>
             </div>

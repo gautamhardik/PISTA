@@ -131,18 +131,25 @@ export default function CasesPage() {
       <div className="absolute top-0 right-1/3 w-[600px] h-[300px] bg-gradient-to-bl from-[#3395ff]/15 to-transparent rounded-full blur-[140px] pointer-events-none" />
 
       <div className="relative z-10">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <PageHeader
-            title="Investigations & Case Queue"
-            description="Persistent operational triage cases hydrated directly from PostgreSQL with full investigator audit trail"
-          />
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#3395ff]/15 text-[#3395ff] border border-[#3395ff]/30 font-bold uppercase tracking-wider">
+                Investigator Studio
+              </span>
+              <span className="text-xs font-mono text-zinc-500">• {filteredCases.length} Active Queue</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white font-display">
+              Investigations & Case Triage
+            </h1>
+          </div>
 
           <button
             onClick={loadCases}
-            className="px-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.1] hover:bg-white/[0.08] text-xs font-mono text-white transition-all flex items-center gap-2 self-start cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.1] hover:bg-white/[0.08] hover:border-[#3395ff]/40 text-xs font-mono text-white transition-all flex items-center gap-2 self-start cursor-pointer shadow-sm backdrop-blur-md"
           >
             <Clock className="w-3.5 h-3.5 text-[#3395ff]" />
-            <span>Refresh Queue</span>
+            <span>Sync Queue</span>
           </button>
         </div>
 

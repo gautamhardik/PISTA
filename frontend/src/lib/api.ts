@@ -81,6 +81,27 @@ export interface RazorpayOrderResponse {
   risk_status: string;
 }
 
+export interface DisputeCase {
+  id: string;
+  tx_id: string;
+  amount: number;
+  currency: string;
+  card_brand: string;
+  card_last4: string;
+  dispute_reason: string;
+  dispute_code: string;
+  created_at: string;
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  hmac_verified: boolean;
+  pista_risk_score: number;
+  shap_top_signals: { feature: string; impact: string; desc: string }[];
+  cardholder_email: string;
+  ip_address: string;
+  billing_city: string;
+  status: "CHALLENGED" | "EVIDENCE_SUBMITTED" | "WON" | "LOST";
+}
+
 export interface CaseItem {
   id: string;
   case_id?: string;
@@ -168,6 +189,8 @@ export interface AnalyticsSummaryResponse {
 }
 
 export interface LiveAnalyticsResponse {
+  status?: string;
+  timeframe?: string;
   total_transactions?: number;
   today_transactions?: number;
   approved_count?: number;
@@ -176,8 +199,10 @@ export interface LiveAnalyticsResponse {
   today_review?: number;
   blocked_count?: number;
   today_blocked?: number;
+  total_cases?: number;
   fraud_rate_percentage?: number;
-  hourly_distribution?: Array<{ hour: string; count: number; fraud_count: number }>;
+  avg_risk_score?: number;
+  hourly_distribution?: Array<{ hour: string; volume?: number; count?: number; p95?: number; fraud_count?: number }>;
   p95_latency_ms?: number;
   mean_latency_ms?: number;
 }
@@ -229,73 +254,185 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 // --- Dynamic Fallback Engine ---
 function generateClientPrediction(input: TransactionInput): PredictionResponse {
   const amt = Number(input.TransactionAmt) || 100;
-  const isHighRiskEmail = input.P_emaildomain === "anonymous.com" || input.P_emaildomain === "protonmail.com" || input.R_emaildomain === "mail.com";
-  const isSuspiciousProduct = input.ProductCD === "W" || input.ProductCD === "C";
-  const isDebit = input.card6 === "debit";
-  
-  let score = 0.04;
-  if (amt > 1500) score += 0.35;
-  if (amt > 4000) score += 0.38;
-  if (isHighRiskEmail) score += 0.28;
-  if (isSuspiciousProduct && amt > 500) score += 0.15;
-  if (!isDebit && amt > 1000) score += 0.08;
-  if (input.dist1 && input.dist1 > 100) score += 0.12;
-  
-  const prob = Math.min(Math.max(Number(score.toFixed(4)), 0.012), 0.965);
-  const rawScore = Number((prob * 0.92 + 0.03).toFixed(4));
-  
+  const isHighRiskEmail = input.P_emaildomain === "anonymous.com" || input.P_emaildomain === "protonmail.com" || input.P_emaildomain === "mail.com" || input.R_emaildomain === "mail.com";
+  const addFeat = input.additional_features || {};
+
+  // Check preset-specific or feature signatures
+  const isHighRiskPreset =
+    input.card1 === 2616 ||
+    (input.card4 === "discover" && isHighRiskEmail) ||
+    (addFeat.fe_stat_card1_prior_txn_count && Number(addFeat.fe_stat_card1_prior_txn_count) > 3000) ||
+    (addFeat.V95 && Number(addFeat.V95) >= 3.0);
+
+  const isReviewPreset =
+    input.card1 === 16132 ||
+    input.ProductCD === "C" ||
+    (addFeat.C2 && Number(addFeat.C2) >= 10) ||
+    (addFeat.C4 && Number(addFeat.C4) >= 5);
+
+  const isStandardPreset =
+    input.card1 === 6328 ||
+    (input.ProductCD === "W" && (input.card4 === "mastercard" || input.card4 === "visa") && input.P_emaildomain === "gmail.com" && !isHighRiskPreset);
+
+  let prob: number;
+  let rawScore: number;
   let riskLevel: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL" = "LOW";
   let action: "APPROVE" | "REVIEW" | "BLOCK" = "APPROVE";
   let decision: "APPROVED" | "REVIEW" | "FRAUD" = "APPROVED";
   let rationale = "Transaction profile aligns with trusted consumer baseline. No anomalous velocity signatures detected.";
-  
-  if (prob >= 0.75) {
+  const factors: RiskFactor[] = [];
+
+  if (isHighRiskPreset) {
+    prob = 0.8205;
+    rawScore = 0.8842;
     riskLevel = "CRITICAL";
     action = "BLOCK";
     decision = "FRAUD";
-    rationale = "High-confidence fraud signature triggered. Disproportionate transaction velocity and extreme value deviation detected.";
-  } else if (prob >= 0.25) {
-    riskLevel = prob >= 0.55 ? "HIGH" : "MEDIUM";
-    action = "REVIEW";
-    decision = "REVIEW";
-    rationale = "Transaction displays ambiguous risk signals (elevated amount or mismatched device/email profile). Escalated for investigator review.";
-  }
+    rationale = "High-confidence fraud signature triggered. Disproportionate transaction velocity, Vesta anomaly signature, and extreme value deviation detected.";
 
-  const factors: RiskFactor[] = [];
-  if (amt > 1000) {
     factors.push({
-      feature: "TransactionAmt",
-      shap_value: +(amt / 3000 * 0.45).toFixed(3),
-      impact: amt > 3000 ? "HIGH" : "MEDIUM",
-      feature_value: `$${amt.toLocaleString()}`
+      feature: "card1_prior_velocity_burst",
+      shap_value: 0.382,
+      impact: "HIGH",
+      feature_value: "3,556 prior txns",
     });
-  }
-  if (input.P_emaildomain) {
     factors.push({
       feature: "P_emaildomain_risk_ratio",
-      shap_value: isHighRiskEmail ? 0.312 : -0.145,
-      impact: isHighRiskEmail ? "HIGH" : "LOW",
-      feature_value: input.P_emaildomain
+      shap_value: 0.315,
+      impact: "HIGH",
+      feature_value: input.P_emaildomain || "mail.com",
+    });
+    factors.push({
+      feature: "card4_discover_anomaly",
+      shap_value: 0.245,
+      impact: "HIGH",
+      feature_value: input.card4 || "discover",
+    });
+    factors.push({
+      feature: "amt_to_card1_hist_mean_ratio",
+      shap_value: 0.210,
+      impact: "MEDIUM",
+      feature_value: "1.61x baseline ($422.50)",
+    });
+    factors.push({
+      feature: "D1_time_since_card_issued",
+      shap_value: 0.185,
+      impact: "MEDIUM",
+      feature_value: "1 day (fresh card entity)",
+    });
+  } else if (isReviewPreset) {
+    prob = 0.5250;
+    rawScore = 0.5610;
+    riskLevel = "HIGH";
+    action = "REVIEW";
+    decision = "REVIEW";
+    rationale = "Transaction displays ambiguous risk signals (elevated velocity counter or cross-domain recipient mismatch). Escalated for investigator review.";
+
+    factors.push({
+      feature: "C2_trans_frequency_count",
+      shap_value: 0.285,
+      impact: "HIGH",
+      feature_value: "11 events / 24h",
+    });
+    factors.push({
+      feature: "ProductCD_commercial_proxy",
+      shap_value: 0.210,
+      impact: "MEDIUM",
+      feature_value: `Product ${input.ProductCD || "C"}`,
+    });
+    factors.push({
+      feature: "cross_domain_resolution_risk",
+      shap_value: 0.145,
+      impact: "MEDIUM",
+      feature_value: "Unlinked counterparty",
+    });
+    factors.push({
+      feature: "card1_card2_ratio",
+      shap_value: -0.082,
+      impact: "LOW",
+      feature_value: "0.98x baseline",
+    });
+  } else if (isStandardPreset) {
+    prob = 0.0019;
+    rawScore = 0.0042;
+    riskLevel = "LOW";
+    action = "APPROVE";
+    decision = "APPROVED";
+    rationale = "Standard consumer profile. Frictionless approval pathway executed with zero friction and low loss expectancy.";
+
+    factors.push({
+      feature: "historical_spending_consistency",
+      shap_value: -0.342,
+      impact: "LOW",
+      feature_value: "140 historical txns",
+    });
+    factors.push({
+      feature: "P_emaildomain_reputation",
+      shap_value: -0.215,
+      impact: "LOW",
+      feature_value: input.P_emaildomain || "gmail.com",
+    });
+    factors.push({
+      feature: "cardholder_geo_addr1_match",
+      shap_value: -0.180,
+      impact: "LOW",
+      feature_value: "Region 315 match",
+    });
+    factors.push({
+      feature: "TransactionAmt_baseline_align",
+      shap_value: -0.125,
+      impact: "LOW",
+      feature_value: `$${amt.toFixed(2)}`,
+    });
+  } else {
+    // Dynamic general formula for arbitrary user inputs
+    let score = 0.02;
+    if (amt > 1000) score += 0.35;
+    if (isHighRiskEmail) score += 0.30;
+    if (input.card4 === "discover" || (input.card6 === "credit" && amt > 300)) score += 0.25;
+    if (input.ProductCD === "C" || input.ProductCD === "H") score += 0.25;
+    if (input.ProductCD === "W" && (input.card4 === "visa" || input.card4 === "mastercard") && input.P_emaildomain === "gmail.com") {
+      score = Math.max(0.01, score - 0.05);
+    }
+
+    prob = Math.min(Math.max(Number(score.toFixed(4)), 0.0019), 0.9850);
+    rawScore = Number((prob * 0.92 + 0.03).toFixed(4));
+
+    if (prob >= 0.75) {
+      riskLevel = "CRITICAL";
+      action = "BLOCK";
+      decision = "FRAUD";
+      rationale = "High-confidence fraud signature triggered. Disproportionate transaction velocity and value deviation detected.";
+    } else if (prob >= 0.25) {
+      riskLevel = prob >= 0.55 ? "HIGH" : "MEDIUM";
+      action = "REVIEW";
+      decision = "REVIEW";
+      rationale = "Transaction displays ambiguous risk signals. Escalated for manual investigator verification.";
+    }
+
+    if (amt > 1000) {
+      factors.push({
+        feature: "TransactionAmt",
+        shap_value: +(amt / 3000 * 0.45).toFixed(3),
+        impact: amt > 3000 ? "HIGH" : "MEDIUM",
+        feature_value: `$${amt.toLocaleString()}`,
+      });
+    }
+    if (input.P_emaildomain) {
+      factors.push({
+        feature: "P_emaildomain_risk_ratio",
+        shap_value: isHighRiskEmail ? 0.312 : -0.145,
+        impact: isHighRiskEmail ? "HIGH" : "LOW",
+        feature_value: input.P_emaildomain,
+      });
+    }
+    factors.push({
+      feature: "card1_card2_amount_mean_ratio",
+      shap_value: amt > 2000 ? 0.245 : -0.082,
+      impact: amt > 2000 ? "HIGH" : "LOW",
+      feature_value: amt > 2000 ? "4.12x baseline" : "0.94x baseline",
     });
   }
-  factors.push({
-    feature: "card1_card2_amount_mean_ratio",
-    shap_value: amt > 2000 ? 0.245 : -0.082,
-    impact: amt > 2000 ? "HIGH" : "LOW",
-    feature_value: amt > 2000 ? "4.12x baseline" : "0.94x baseline"
-  });
-  factors.push({
-    feature: "C1_trans_freq_velocity_1h",
-    shap_value: +(Math.random() * 0.15 + 0.05).toFixed(3),
-    impact: "MEDIUM",
-    feature_value: "3 events / hr"
-  });
-  factors.push({
-    feature: "D1_days_since_card_creation",
-    shap_value: -0.118,
-    impact: "LOW",
-    feature_value: "342 days"
-  });
 
   const txId = `txn_${Date.now().toString(36)}_${Math.random().toString(36).substr(2, 4)}`;
 
@@ -505,7 +642,37 @@ function handleFallback<T>(path: string, options?: RequestInit): T {
 
   // 3. Razorpay Payment Verification
   if (path.includes("/payments/razorpay/verify")) {
-    return generateClientPrediction({ TransactionAmt: 500, ProductCD: "W", card6: "debit" }) as unknown as T;
+    let customerInput: TransactionInput = { TransactionAmt: 150, ProductCD: "W", card6: "credit" };
+    if (options?.body) {
+      try {
+        const body = JSON.parse(options.body as string);
+        if (body.customer_metadata) {
+          const meta = body.customer_metadata;
+          customerInput = {
+            TransactionAmt: meta.TransactionAmt ?? meta.amount ?? 150,
+            ProductCD: meta.ProductCD || "W",
+            card1: meta.card1,
+            card2: meta.card2,
+            card3: meta.card3,
+            card4: meta.card4,
+            card5: meta.card5,
+            card6: meta.card6,
+            addr1: meta.addr1,
+            addr2: meta.addr2,
+            dist1: meta.dist1,
+            dist2: meta.dist2,
+            P_emaildomain: meta.P_emaildomain || (meta.email ? meta.email.split("@")[1] : undefined),
+            R_emaildomain: meta.R_emaildomain,
+            DeviceType: meta.DeviceType || meta.device_type,
+            DeviceInfo: meta.DeviceInfo,
+            additional_features: meta.additional_features,
+          };
+        }
+      } catch (e) {
+        console.error("Failed to parse razorpay verify payload in fallback", e);
+      }
+    }
+    return generateClientPrediction(customerInput) as unknown as T;
   }
 
   // 4. Cases Route
@@ -531,6 +698,83 @@ function handleFallback<T>(path: string, options?: RequestInit): T {
 
   if (path.includes("/cases/") && path.includes("/status")) {
     return { status: "success", case_id: "CASE-CURRENT", new_status: "UPDATED" } as unknown as T;
+  }
+
+  // 4b. Disputes Route
+  if (path === "/api/v1/disputes") {
+    return [
+      {
+        id: "DSP-84920",
+        tx_id: "TX-77490218-INR",
+        amount: 14999.0,
+        currency: "INR",
+        card_brand: "RuPay Platinum",
+        card_last4: "8821",
+        dispute_reason: "Fraudulent Transaction / Card Not Present",
+        dispute_code: "10.4 (Card-Absent Fraud)",
+        created_at: "2026-08-24 18:42:11 IST",
+        razorpay_payment_id: "pay_Q8h71Nx81Kl901",
+        razorpay_order_id: "order_Q8h71A0918JslK",
+        hmac_verified: true,
+        pista_risk_score: 0.12,
+        shap_top_signals: [
+          {
+            feature: "device_fingerprint_match",
+            impact: "-0.42 (Legitimate)",
+            desc: "3-year recurring browser & hardware GUID match",
+          },
+          {
+            feature: "geo_ip_billing_consistency",
+            impact: "-0.31 (Legitimate)",
+            desc: "Zero ISP velocity shift (Mumbai, MH -> Verified Airtel Fiber)",
+          },
+          {
+            feature: "card_velocity_30d",
+            impact: "-0.25 (Legitimate)",
+            desc: "Regular spending pattern across 24 historical billing cycles",
+          },
+        ],
+        cardholder_email: "rohit.sharma@enterprise.in",
+        ip_address: "103.212.14.88",
+        billing_city: "Mumbai, India",
+        status: "CHALLENGED",
+      },
+      {
+        id: "DSP-91042",
+        tx_id: "TX-99014532-USD",
+        amount: 350.0,
+        currency: "USD",
+        card_brand: "Visa Signature",
+        card_last4: "4019",
+        dispute_reason: "Transaction Not Recognized (Friendly Fraud)",
+        dispute_code: "10.4 (Unauthorized)",
+        created_at: "2026-08-24 14:15:30 IST",
+        razorpay_payment_id: "pay_P91209Akjs812L",
+        razorpay_order_id: "order_P91209Opqw99",
+        hmac_verified: true,
+        pista_risk_score: 0.18,
+        shap_top_signals: [
+          {
+            feature: "authenticated_3ds_stepup",
+            impact: "-0.55 (Legitimate)",
+            desc: "OTP SMS challenge successfully completed with biometric match",
+          },
+          {
+            feature: "card_composite_hash",
+            impact: "-0.20 (Legitimate)",
+            desc: "Verified frequent shopper token identifier",
+          },
+        ],
+        cardholder_email: "alex.m@cloudcorp.io",
+        ip_address: "198.51.100.42",
+        billing_city: "San Francisco, CA",
+        status: "CHALLENGED",
+      },
+    ] as unknown as T;
+  }
+
+  if (path.includes("/disputes/") && path.includes("/submit")) {
+    return { status: "success", dispute_id: "DSP-UPDATED", status_code: "EVIDENCE_SUBMITTED" } as unknown as T;
   }
 
   // 5. Activity Route
@@ -627,7 +871,68 @@ function handleFallback<T>(path: string, options?: RequestInit): T {
 
   // 8. Live Analytics Route
   if (path.includes("/analytics/live")) {
+    const match = path.match(/timeframe=([a-zA-Z0-9]+)/);
+    const tf = (match ? match[1] : "today").toLowerCase();
+
+    if (tf === "7d") {
+      return {
+        status: "active",
+        timeframe: "7d",
+        total_transactions: 9840,
+        today_transactions: 9840,
+        approved_count: 9092,
+        today_approved: 9092,
+        reviewed_count: 512,
+        today_review: 512,
+        blocked_count: 236,
+        today_blocked: 236,
+        total_cases: 48,
+        fraud_rate_percentage: 2.4,
+        avg_risk_score: 0.14,
+        hourly_distribution: [
+          { hour: "Mon", volume: 1240, p95: 58 },
+          { hour: "Tue", volume: 1480, p95: 62 },
+          { hour: "Wed", volume: 1650, p95: 65 },
+          { hour: "Thu", volume: 1390, p95: 59 },
+          { hour: "Fri", volume: 1820, p95: 71 },
+          { hour: "Sat", volume: 1210, p95: 54 },
+          { hour: "Sun", volume: 1050, p95: 51 },
+        ],
+        p95_latency_ms: 64.8,
+        mean_latency_ms: 45.2,
+      } as unknown as T;
+    }
+
+    if (tf === "30d") {
+      return {
+        status: "active",
+        timeframe: "30d",
+        total_transactions: 42500,
+        today_transactions: 42500,
+        approved_count: 39270,
+        today_approved: 39270,
+        reviewed_count: 2210,
+        today_review: 2210,
+        blocked_count: 1020,
+        today_blocked: 1020,
+        total_cases: 195,
+        fraud_rate_percentage: 2.4,
+        avg_risk_score: 0.13,
+        hourly_distribution: [
+          { hour: "W1 (D1-7)", volume: 9400, p95: 56 },
+          { hour: "W2 (D8-14)", volume: 10800, p95: 61 },
+          { hour: "W3 (D15-21)", volume: 11900, p95: 66 },
+          { hour: "W4 (D22-28)", volume: 9100, p95: 59 },
+          { hour: "W5 (D29-30)", volume: 1300, p95: 53 },
+        ],
+        p95_latency_ms: 68.2,
+        mean_latency_ms: 46.1,
+      } as unknown as T;
+    }
+
     return {
+      status: "active",
+      timeframe: "today",
       total_transactions: 1420,
       today_transactions: 1420,
       approved_count: 1312,
@@ -636,17 +941,19 @@ function handleFallback<T>(path: string, options?: RequestInit): T {
       today_review: 74,
       blocked_count: 34,
       today_blocked: 34,
+      total_cases: 8,
       fraud_rate_percentage: 2.39,
+      avg_risk_score: 0.12,
       hourly_distribution: [
-        { hour: "14:00", count: 180, fraud_count: 3 },
-        { hour: "15:00", count: 210, fraud_count: 5 },
-        { hour: "16:00", count: 240, fraud_count: 7 },
-        { hour: "17:00", count: 290, fraud_count: 8 },
-        { hour: "18:00", count: 320, fraud_count: 6 },
-        { hour: "19:00", count: 180, fraud_count: 5 }
+        { hour: "02:00", volume: 45, p95: 48 },
+        { hour: "06:00", volume: 120, p95: 54 },
+        { hour: "10:00", volume: 380, p95: 62 },
+        { hour: "14:00", volume: 450, p95: 68 },
+        { hour: "18:00", volume: 290, p95: 61 },
+        { hour: "22:00", volume: 135, p95: 52 },
       ],
-      p95_latency_ms: 118.4,
-      mean_latency_ms: 54.2
+      p95_latency_ms: 58.4,
+      mean_latency_ms: 42.1,
     } as unknown as T;
   }
 
@@ -711,6 +1018,13 @@ export const api = {
         resolution,
         investigator_note: note,
       }),
+    }),
+
+  disputes: () => request<DisputeCase[]>("/api/v1/disputes"),
+  submitDisputeEvidence: (disputeId: string, representationText: string) =>
+    request<{ status: string; dispute_id: string; status_code: string }>(`/api/v1/disputes/${disputeId}/submit`, {
+      method: "POST",
+      body: JSON.stringify({ representation_text: representationText }),
     }),
 
   activity: () => request<ActivityItem[]>("/api/v1/activity"),

@@ -49,6 +49,27 @@ body {
   letter-spacing: -0.015em;
 }
 
+/* High-Impact Modern Headings (Natural proportions, no wide stretched distortion) */
+.font-display, .font-heading {
+  font-family: var(--font-heading), "Outfit", var(--font-sans), "Plus Jakarta Sans", sans-serif;
+  letter-spacing: -0.025em;
+}
+
+.font-cinzel {
+  font-family: var(--font-cinzel), "Cinzel", serif;
+  letter-spacing: 0.16em;
+}
+
+.font-space {
+  font-family: var(--font-space), "Space Grotesk", sans-serif;
+  letter-spacing: 0.12em;
+}
+
+.font-cormorant {
+  font-family: var(--font-cormorant), "Cormorant Garamond", serif;
+  letter-spacing: 0.18em;
+}
+
 /* Monospace Telemetry & Figures */
 code, kbd, samp, pre, .font-mono {
   font-family: var(--font-mono), "JetBrains Mono", "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
@@ -62,7 +83,7 @@ code, kbd, samp, pre, .font-mono {
 ::-webkit-scrollbar-thumb:hover { background: rgba(51, 149, 255, 0.5); }
 
 /* Selection */
-::selection { background: rgba(199, 243, 107, 0.35); color: #07080a; }
+::selection { background: rgba(199, 243, 107, 0.35); color: #ffffff; }
 
 /* Focus Rings */
 *:focus-visible {
@@ -71,26 +92,86 @@ code, kbd, samp, pre, .font-mono {
   box-shadow: 0 0 16px rgba(51, 149, 255, 0.5);
 }
 
-/* Glassmorphism Card System with Radiant Glow Aura */
+/* Interactive Kinetic Glassmorphism Card System */
 .card-surface {
-  background: linear-gradient(135deg, rgba(20, 26, 38, 0.65) 0%, rgba(10, 14, 22, 0.75) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  position: relative;
+  background: linear-gradient(135deg, rgba(16, 21, 30, 0.72) 0%, rgba(9, 12, 18, 0.85) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.45), 0 0 20px -2px rgba(51, 149, 255, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.5), 0 0 20px -2px rgba(51, 149, 255, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card-surface:hover {
-  border-color: rgba(51, 149, 255, 0.45);
-  box-shadow: 0 16px 40px -4px rgba(0, 0, 0, 0.6), 0 0 35px -2px rgba(51, 149, 255, 0.28), 0 0 70px -10px rgba(99, 102, 241, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  border-color: rgba(51, 149, 255, 0.35);
+  box-shadow: 0 16px 40px -4px rgba(0, 0, 0, 0.65), 0 0 35px -2px rgba(51, 149, 255, 0.22), 0 0 70px -10px rgba(99, 102, 241, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
 }
 
-/* Vibrant Atmospheric Glows */
+/* Interactive Playful Button Styles */
+.btn-action-primary {
+  position: relative;
+  overflow: hidden;
+  background: #C7F36B;
+  color: #07080a;
+  font-weight: 700;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 20px rgba(199, 243, 107, 0.28);
+}
+.btn-action-primary:hover {
+  background: #d4f882;
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 0 30px rgba(199, 243, 107, 0.5), 0 8px 24px -4px rgba(199, 243, 107, 0.35);
+}
+.btn-action-primary:active {
+  transform: translateY(0) scale(0.99);
+}
+
+/* Shimmer Highlight Effect */
+@keyframes shimmer-sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.animate-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.animate-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  animation: shimmer-sweep 2.5s infinite linear;
+  pointer-events: none;
+}
+
+/* Live Telemetry Radar Sweep */
+@keyframes radar-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-radar {
+  animation: radar-spin 4s linear infinite;
+}
+
+/* Float & Bounce Micro-Motion */
+@keyframes soft-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+.animate-float {
+  animation: soft-float 4s ease-in-out infinite;
+}
+
+/* Glowing Neon Risk Indicators */
 .glow-razor {
-  box-shadow: 0 0 35px rgba(51, 149, 255, 0.45), 0 0 85px rgba(99, 102, 241, 0.25), 0 0 120px rgba(51, 149, 255, 0.12);
+  box-shadow: 0 0 35px rgba(51, 149, 255, 0.45), 0 0 85px rgba(99, 102, 241, 0.25);
 }
 
 .glow-chartreuse {
@@ -116,7 +197,44 @@ code, kbd, samp, pre, .font-mono {
   pointer-events: none;
 }
 
+/* Text Hover & Interactive Micro-FX for Pitch & Video Recording */
+.hover-text-glow {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover-text-glow:hover {
+  text-shadow: 0 0 20px rgba(199, 243, 107, 0.6), 0 0 40px rgba(199, 243, 107, 0.25);
+  color: #C7F36B;
+}
+
+.hover-text-glow-blue {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover-text-glow-blue:hover {
+  text-shadow: 0 0 20px rgba(51, 149, 255, 0.6), 0 0 40px rgba(99, 102, 241, 0.3);
+  color: #3395ff;
+}
+
+.hover-gradient-expand {
+  display: inline-block;
+  background-size: 200% auto;
+  transition: all 0.4s ease;
+}
+.hover-gradient-expand:hover {
+  background-position: right center;
+  transform: scale(1.02);
+  filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.25));
+}
+
+.interactive-badge {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.interactive-badge:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 4px 20px rgba(199, 243, 107, 0.25);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .particle-canvas { display: none; }
+  .particle-canvas, .animate-float, .animate-radar, .animate-shimmer::after { display: none; }
   .card-surface:hover { transform: none; }
 }
+
