@@ -5,7 +5,6 @@
 
 <br/>
 
-[![Master Pitch Video](https://img.shields.io/badge/🎬_Master_Pitch_Demo-5m_33s_Video-FF0000.svg?style=for-the-badge&logo=youtube&logoColor=white)](output/PISTA_Master_Pitch_Demo.mp4)
 [![GitHub Source](https://img.shields.io/badge/GitHub-Repository-181717.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/gautamhardik/PISTA)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 [![Python 3.13](https://img.shields.io/badge/Python-3.13+-3776AB.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
@@ -39,30 +38,29 @@
 <details>
 <summary>📑 <b>Click to expand Table of Contents</b></summary>
 
-1. [Demo & Master Pitch Video](#1-demo--master-pitch-video)
-2. [Executive Summary](#2-executive-summary)
-3. [The Core Problem & Business ROI](#3-the-core-problem--business-roi)
-4. [Why PISTA Architecture](#4-why-pista-architecture)
-5. [System Architecture & Sequence Flow](#5-system-architecture--sequence-flow)
-6. [End-to-End Transaction Flow](#6-end-to-end-transaction-flow)
-7. [Machine Learning Pipeline & Dataset](#7-machine-learning-pipeline--dataset)
-8. [Reproducible 5-Notebook Suite](#8-reproducible-5-notebook-suite)
-9. [Feature Engineering (10 Core Families)](#9-feature-engineering-10-core-families)
-10. [Model Benchmarks & SLA Trade-offs](#10-model-benchmarks--sla-trade-offs)
-11. [Probability Calibration & TreeSHAP Attribution](#11-probability-calibration--treeshap-attribution)
-12. [Tri-State Policy Routing Matrix](#12-tri-state-policy-routing-matrix)
-13. [Application Showcase & Visual Tour](#13-application-showcase--visual-tour)
-14. [Security & Cryptographic Invariants](#14-security--cryptographic-invariants)
-15. [API Specification & Contract Schemas](#15-api-specification--contract-schemas)
-16. [Technology Stack](#16-technology-stack)
-17. [Environment Configuration](#17-environment-configuration)
-18. [Local Setup & 1-Click Launch Guide](#18-local-setup--1-click-launch-guide)
-19. [Evaluator Quickstart (Step-by-Step Test Drive)](#19-evaluator-quickstart-step-by-step-test-drive)
-20. [Project Directory Structure](#20-project-directory-structure)
-21. [Automated Test Suite & Quality Assurance](#21-automated-test-suite--quality-assurance)
-22. [Limitations & Production Hardening](#22-limitations--production-hardening)
-23. [Engineering War Stories: 3 Production Hurdles](#23-engineering-war-stories-what-broke-at-2-am--how-we-got-out)
-24. [Conclusion & Citation](#24-conclusion--citation)
+1. [Executive Summary](#1-executive-summary)
+2. [The Core Problem & Business ROI](#2-the-core-problem--business-roi)
+3. [Why PISTA Architecture](#3-why-pista-architecture)
+4. [System Architecture & Sequence Flow](#4-system-architecture--sequence-flow)
+5. [End-to-End Transaction Flow](#5-end-to-end-transaction-flow)
+6. [Machine Learning Pipeline & Dataset](#6-machine-learning-pipeline--dataset)
+7. [Reproducible 5-Notebook Suite](#7-reproducible-5-notebook-suite)
+8. [Feature Engineering (10 Core Families)](#8-feature-engineering-10-core-families)
+9. [Model Benchmarks & SLA Trade-offs](#9-model-benchmarks--sla-trade-offs)
+10. [Probability Calibration & TreeSHAP Attribution](#10-probability-calibration--treeshap-attribution)
+11. [Tri-State Policy Routing Matrix](#11-tri-state-policy-routing-matrix)
+12. [Application Showcase & Visual Tour](#12-application-showcase--visual-tour)
+13. [Security & Cryptographic Invariants](#13-security--cryptographic-invariants)
+14. [API Specification & Contract Schemas](#14-api-specification--contract-schemas)
+15. [Technology Stack](#15-technology-stack)
+16. [Environment Configuration](#16-environment-configuration)
+17. [Local Setup & 1-Click Launch Guide](#17-local-setup--1-click-launch-guide)
+18. [Evaluator Quickstart (Step-by-Step Test Drive)](#18-evaluator-quickstart-step-by-step-test-drive)
+19. [Project Directory Structure](#19-project-directory-structure)
+20. [Automated Test Suite & Quality Assurance](#20-automated-test-suite--quality-assurance)
+21. [Limitations & Production Hardening](#21-limitations--production-hardening)
+22. [Engineering War Stories: 3 Production Hurdles](#22-engineering-war-stories-what-broke-at-2-am--how-we-got-out)
+23. [Conclusion & Citation](#23-conclusion--citation)
 
 </details>
 
@@ -100,7 +98,7 @@ graph LR
 
 ---
 
-## 3. The Core Problem & Business ROI
+## 2. The Core Problem & Business ROI
 
 1. **Extreme Class Imbalance (3.5% Fraud Rate)**: Measuring accuracy or ROC-AUC creates a false sense of security; high true-negative rates mask catastrophic false-positive spikes.
 2. **Uncalibrated Model Logits**: Raw gradient boosting outputs are uncalibrated rankings rather than true mathematical probabilities $P(Y=1|X)$.
@@ -114,7 +112,7 @@ PISTA resolves all four with **Isotonic Probability Calibration**, **exact local
 
 ---
 
-## 4. Why PISTA Architecture
+## 3. Why PISTA Architecture
 
 | Dimension | Industry Default | PISTA Production Architecture | Operational Impact |
 | :--- | :--- | :--- | :--- |
@@ -128,7 +126,7 @@ PISTA resolves all four with **Isotonic Probability Calibration**, **exact local
 
 ---
 
-## 5. System Architecture & Sequence Flow
+## 4. System Architecture & Sequence Flow
 
 ### 🏗️ Full-Stack Component Architecture
 ```mermaid
@@ -206,7 +204,7 @@ sequenceDiagram
 
 ---
 
-## 6. End-to-End Transaction Flow
+## 5. End-to-End Transaction Flow
 
 1. **Ingestion**: Telemetry arrives via client API payload or authenticated Razorpay checkout modal.
 2. **Cryptographic Check**: If gateway payment, the raw byte stream is verified against the HMAC-SHA256 signature.
@@ -223,7 +221,7 @@ sequenceDiagram
 
 ---
 
-## 7. Machine Learning Pipeline & Dataset
+## 6. Machine Learning Pipeline & Dataset
 
 ### Dataset: IEEE-CIS Fraud Detection Benchmark
 * **Total Records**: 590,540 real-world e-commerce transactions.
@@ -238,7 +236,7 @@ unzip -q Data/raw/ieee-fraud-detection.zip -d Data/raw/
 
 ---
 
-## 8. Reproducible 5-Notebook Suite
+## 7. Reproducible 5-Notebook Suite
 
 The entire ML lifecycle—from forensic data exploration to production artifact serialization—is encapsulated in 5 sequential Jupyter notebooks in [`Notebooks/`](Notebooks):
 
@@ -261,7 +259,7 @@ jupyter nbconvert --to notebook --execute Notebooks/05_model_explainability_and_
 
 ---
 
-## 9. Feature Engineering (10 Core Families)
+## 8. Feature Engineering (10 Core Families)
 
 ```text
 492 Engineered Features
@@ -279,7 +277,7 @@ jupyter nbconvert --to notebook --execute Notebooks/05_model_explainability_and_
 
 ---
 
-## 10. Model Benchmarks & SLA Trade-offs
+## 9. Model Benchmarks & SLA Trade-offs
 
 ### Held-Out Validation Cohort (118,534 Transactions)
 
@@ -299,7 +297,7 @@ $$\text{PR-AUC} = \int_0^1 P(R) \, dR = \sum_{k=1}^K P(k) \cdot \Delta R(k)$$
 
 ---
 
-## 11. Probability Calibration & TreeSHAP Attribution
+## 10. Probability Calibration & TreeSHAP Attribution
 
 ### Isotonic Probability Calibration
 Raw boosting logits optimize ranking rather than posterior probabilities. PISTA passes scores through an Isotonic Calibrator:
@@ -314,7 +312,7 @@ TreeSHAP computes exact local additive attributions ($f(x) = \phi_0 + \sum_{i=1}
 
 ---
 
-## 12. Tri-State Policy Routing Matrix
+## 11. Tri-State Policy Routing Matrix
 
 | Calibrated Posterior Probability ($P$) | Operational Policy | Execution Path | Merchant Business Impact |
 | :--- | :---: | :--- | :--- |
@@ -324,7 +322,7 @@ TreeSHAP computes exact local additive attributions ($f(x) = \phi_0 + \sum_{i=1}
 
 ---
 
-## 13. Application Showcase & Visual Tour
+## 12. Application Showcase & Visual Tour
 
 ### 01. Transaction Risk Analysis & Form Hydration
 Submit raw 492-feature parameters directly or test realistic fraud scenarios via quick presets.
@@ -362,7 +360,7 @@ Runtime container probes, cryptographic invariants, and database connection moni
 
 ---
 
-## 14. Security & Cryptographic Invariants
+## 13. Security & Cryptographic Invariants
 
 * **Server-Side API Secrets**: Gateway credentials and webhook secrets never leak to the client bundle.
 * **Raw-Byte HMAC-SHA256 Verification**: Payment signatures are verified using immutable raw request bytes before JSON deserialization.
@@ -371,7 +369,7 @@ Runtime container probes, cryptographic invariants, and database connection moni
 
 ---
 
-## 15. API Specification & Contract Schemas
+## 14. API Specification & Contract Schemas
 
 ### 📡 Sample Request & Response Contract (`POST /api/v1/predict`)
 
@@ -438,7 +436,7 @@ curl -X POST http://localhost:8000/api/v1/predict \
 
 ---
 
-## 16. Technology Stack
+## 15. Technology Stack
 
 | Layer | Technology | Key Role in PISTA |
 | :--- | :--- | :--- |
@@ -452,7 +450,7 @@ curl -X POST http://localhost:8000/api/v1/predict \
 
 ---
 
-## 17. Environment Configuration
+## 16. Environment Configuration
 
 Copy `.env.example` to `.env` in the root directory:
 ```bash
@@ -469,7 +467,7 @@ cp .env.example .env
 
 ---
 
-## 18. Local Setup & 1-Click Launch Guide
+## 17. Local Setup & 1-Click Launch Guide
 
 ### Option A: 1-Click Instant Launch (Windows)
 ```cmd
@@ -501,7 +499,7 @@ docker compose ps
 
 ---
 
-## 19. Evaluator Quickstart (Step-by-Step Test Drive)
+## 18. Evaluator Quickstart (Step-by-Step Test Drive)
 
 1. Open **[http://localhost:3000/analyze](http://localhost:3000/analyze)**.
 2. Click the preset **`02. High Risk Vector ($4,850)`**, then click **Analyze Transaction**.
@@ -511,7 +509,7 @@ docker compose ps
 
 ---
 
-## 20. Project Directory Structure
+## 19. Project Directory Structure
 
 ```text
 PISTA/
@@ -553,7 +551,7 @@ PISTA/
 
 ---
 
-## 21. Automated Test Suite & Quality Assurance
+## 20. Automated Test Suite & Quality Assurance
 
 ```bash
 # Execute backend test suite
@@ -580,7 +578,7 @@ tests/test_api.py::test_model_lineage_metadata PASSED                  [100%]
 
 ---
 
-## 22. Limitations & Production Hardening
+## 21. Limitations & Production Hardening
 
 * **Distribution Drift**: Real-world transactions from novel merchant categories are normalized using historical feature store baselines.
 * **Test Mode Gateway**: Razorpay integration runs in Test Mode; enterprise live processing requires merchant KYC activation and live key rotation.
@@ -588,7 +586,7 @@ tests/test_api.py::test_model_lineage_metadata PASSED                  [100%]
 
 ---
 
-## 23. Engineering War Stories: What Broke at 2 AM & How We Got Out
+## 22. Engineering War Stories: What Broke at 2 AM & How We Got Out
 
 ### 💥 War Story 1: The Raw-Body Webhook HMAC Signature Mismatch
 * **The Incident**: Razorpay webhook calls failed cryptographic signature verification (`400 Invalid HMAC Signature`) during end-to-end integration tests despite identical secret keys.
@@ -607,7 +605,7 @@ tests/test_api.py::test_model_lineage_metadata PASSED                  [100%]
 
 ---
 
-## 24. Conclusion & Citation
+## 23. Conclusion & Citation
 
 PISTA proves that transaction fraud prevention requires more than just training a classifier—it requires a complete operational system spanning **rigorous feature engineering**, **sub-millisecond inference**, **calibrated posterior probabilities**, **interpretable model attribution**, **tri-state policy execution**, and **immutable audit logging**.
 
