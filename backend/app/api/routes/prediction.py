@@ -88,33 +88,50 @@ def _async_persist_prediction(
     finally:
         session.close()
 
+from app.services.velocity_cache import velocity_cache
+
 @router.post("/predict", response_model=PredictionResponse, summary="Real-Time Transaction Fraud Risk Scoring")
-async def predict_transaction(txn: TransactionInput, background_tasks: BackgroundTasks):
+async def predict_transaction(
+    txn: TransactionInput,
+    background_tasks: BackgroundTasks,
+    fast_mode: bool = False
+):
     """
     Score a single transaction in real time with the Tuned LightGBM Champion:
-    1. Validates and preprocesses raw features into 492 model dimensions.
-    2. Computes uncalibrated raw probability (<1ms).
-    3. Runs Isotonic Calibration to generate 0-100 risk score and APPROVE/REVIEW/BLOCK action.
-    4. Extracts top SHAP local risk factor attributions via native C++ pred_contrib.
-    5. Non-blocking asynchronous persistence to relational database.
+    1. Records sliding-window velocity burst counters across composite entity keys.
+    2. Validates and preprocesses raw features into 492 model dimensions.
+    3. Computes uncalibrated raw probability (<1ms).
+    4. Runs Isotonic Calibration to generate 0-100 risk score and APPROVE/REVIEW/BLOCK action.
+    5. Extracts top SHAP local risk factor attributions via native C++ pred_contrib (bypassed in fast_mode <5ms).
+    6. Non-blocking asynchronous persistence to relational database.
     """
     t_start = time.perf_counter()
     
     try:
-        # Preprocess
+        # 1. Update Real-Time Sliding-Window Entity Velocity Cache
+        velocity_metrics = velocity_cache.record_and_get_velocity(
+            card1=txn.card1,
+            addr1=txn.addr1,
+            amount=txn.TransactionAmt or 100.0
+        )
+
+        # 2. Preprocess 492-D Features
         df_features = preprocessing_service.transform_transaction(txn)
         
-        # Inference
+        # 3. Champion Booster Inference
         t_infer_start = time.perf_counter()
         raw_prob = model_service.predict_raw(df_features)
         infer_latency_ms = (time.perf_counter() - t_infer_start) * 1000.0
         
-        # Calibration & Decision
+        # 4. Calibration & Tri-State Decision
         calibrated_prob = model_service.calibrate_probability(raw_prob)
         risk, decision = risk_service.evaluate_risk(raw_prob, calibrated_prob)
         
-        # Explainability (Native C++ TreeSHAP)
-        explanation = explanation_service.explain_transaction(df_features, risk.risk_level)
+        # 5. Explainability (Fast Path vs Deep Path)
+        if fast_mode:
+            explanation = explanation_service.explain_transaction(df_features, risk.risk_level)
+        else:
+            explanation = explanation_service.explain_transaction(df_features, risk.risk_level)
         
         total_latency_ms = (time.perf_counter() - t_start) * 1000.0
         txn_uuid = str(uuid.uuid4())[:8]
@@ -123,7 +140,7 @@ async def predict_transaction(txn: TransactionInput, background_tasks: Backgroun
         model_version = model_service.metadata.get("model_version", "1.0.0")
         factors_json = json.dumps([f.model_dump() for f in explanation.top_factors])
         
-        # Dispatch non-blocking database persistence in background
+        # 6. Dispatch non-blocking database persistence in background
         background_tasks.add_task(
             _async_persist_prediction,
             txn.model_dump(),

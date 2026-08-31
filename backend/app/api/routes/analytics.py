@@ -265,3 +265,15 @@ async def list_activity(session: Session = Depends(get_session)):
         }
         for a in assessments
     ]
+
+@router.get("/analytics/drift", summary="Continuous Model Drift & Population Stability Index (PSI)")
+async def get_model_drift(session: Session = Depends(get_session)):
+    """
+    Computes real-time Population Stability Index (PSI) and feature drift 
+    across recent transactions versus baseline 118K validation reference distributions.
+    """
+    from app.services.drift_service import drift_service
+    risk_repo = RiskAssessmentRepository(session)
+    recent = risk_repo.list_recent(limit=200)
+    scores = [a.risk_score for a in recent] if recent else []
+    return drift_service.calculate_psi(scores)
