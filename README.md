@@ -5,7 +5,6 @@
 
 <br/>
 
-[![Live Platform](https://img.shields.io/badge/⚡_Live_Platform-Vercel_Production-000000.svg?style=for-the-badge&logo=vercel&logoColor=white)](https://frontend-sigma-vert-50.vercel.app)
 [![Master Pitch Video](https://img.shields.io/badge/🎬_Master_Pitch_Demo-5m_33s_Video-FF0000.svg?style=for-the-badge&logo=youtube&logoColor=white)](output/PISTA_Master_Pitch_Demo.mp4)
 [![GitHub Source](https://img.shields.io/badge/GitHub-Repository-181717.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/gautamhardik/PISTA)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
@@ -471,8 +470,6 @@ cp .env.example .env
 ---
 
 ## 18. Local Setup & 1-Click Launch Guide
-
-> **Live UI Demo**: Access the public deployment at **[https://frontend-sigma-vert-50.vercel.app](https://frontend-sigma-vert-50.vercel.app)**.
 
 ### Option A: 1-Click Instant Launch (Windows)
 ```cmd
