@@ -37,9 +37,9 @@ export default function AnalyticsPage() {
   const [loading, setLoading] = useState(true);
   const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
 
-  const loadData = async () => {
+  const loadData = async (silent = false) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
       const [sumRes, liveRes] = await Promise.all([
         api.analytics(),
         api.liveAnalytics(timeframe),
@@ -50,7 +50,7 @@ export default function AnalyticsPage() {
     } catch (err) {
       console.error("Failed to load analytics", err);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -72,8 +72,8 @@ export default function AnalyticsPage() {
   };
 
   useEffect(() => {
-    loadData();
-    const interval = setInterval(loadData, 10000);
+    loadData(false);
+    const interval = setInterval(() => loadData(true), 15000);
     return () => clearInterval(interval);
   }, [timeframe]);
 

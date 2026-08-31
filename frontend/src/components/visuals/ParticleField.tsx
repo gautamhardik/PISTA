@@ -189,14 +189,26 @@ export function ParticleField({ className, mode = "hero", riskLevel }: Props) {
         ctx.fill();
       }
 
-      animId = requestAnimationFrame(draw);
+      if (!document.hidden) {
+        animId = requestAnimationFrame(draw);
+      }
     }
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        cancelAnimationFrame(animId);
+        animId = requestAnimationFrame(draw);
+      } else {
+        cancelAnimationFrame(animId);
+      }
+    };
 
     init();
     animId = requestAnimationFrame(draw);
     window.addEventListener("resize", handleResize);
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
     window.addEventListener("mouseleave", handleMouseLeave);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       cancelAnimationFrame(animId);
@@ -204,6 +216,7 @@ export function ParticleField({ className, mode = "hero", riskLevel }: Props) {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseleave", handleMouseLeave);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [mode, riskLevel]);
 

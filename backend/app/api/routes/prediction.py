@@ -1,7 +1,7 @@
 import time, uuid, json
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 
 from app.schemas.transaction import TransactionInput
 from app.schemas.prediction import PredictionResponse, ModelInfo, PerformanceTelemetry
@@ -10,20 +10,93 @@ from app.services.preprocessing_service import preprocessing_service
 from app.services.risk_service import risk_service
 from app.services.explanation_service import explanation_service
 from app.core.logging import logger
-from app.core.database import get_session
-from app.db.repositories import TransactionRepository, RiskAssessmentRepository, CaseRepository
+from app.core.database import SessionLocal, get_session
+from app.models.db_models import TransactionRecord, RiskAssessmentRecord, CaseRecord
 
 router = APIRouter()
 
+def _async_persist_prediction(
+    txn_dict: dict,
+    txn_uuid: str,
+    raw_prob: float,
+    calibrated_prob: float,
+    risk_score: float,
+    risk_level: str,
+    decision_val: str,
+    action_val: str,
+    policy_rule: str,
+    model_name: str,
+    model_version: str,
+    factors_json: str,
+    infer_latency_ms: float,
+    total_latency_ms: float
+):
+    """Background worker that writes transaction, risk assessment, and case records without blocking HTTP response."""
+    session = SessionLocal()
+    try:
+        tx_rec = TransactionRecord(
+            transaction_uuid=txn_uuid,
+            provider="direct",
+            amount_minor=int(min(round(txn_dict.get("TransactionAmt", 100.0) * 83.0 * 100), 2147483647)),
+            amount_inr=min(round(txn_dict.get("TransactionAmt", 100.0) * 83.0, 2), 999999999999.0),
+            amount_usd=txn_dict.get("TransactionAmt", 100.0),
+            currency="USD",
+            product_cd=txn_dict.get("ProductCD") or "W",
+            card_network=txn_dict.get("card4"),
+            card_type=txn_dict.get("card6"),
+            email=txn_dict.get("P_emaildomain"),
+            device_type=txn_dict.get("DeviceType")
+        )
+        session.add(tx_rec)
+
+        risk_rec = RiskAssessmentRecord(
+            transaction=tx_rec,
+            transaction_uuid=txn_uuid,
+            raw_probability=raw_prob,
+            calibrated_probability=calibrated_prob,
+            risk_score=risk_score,
+            risk_level=risk_level,
+            decision=decision_val,
+            action=action_val,
+            policy_rule=policy_rule,
+            model_name=model_name,
+            model_version=model_version,
+            top_factors_json=factors_json,
+            inference_latency_ms=infer_latency_ms,
+            total_latency_ms=total_latency_ms
+        )
+        session.add(risk_rec)
+
+        case_id = f"RG-{txn_uuid.upper()}"
+        case_rec = CaseRecord(
+            case_id=case_id,
+            transaction=tx_rec,
+            risk_assessment=risk_rec,
+            transaction_uuid=txn_uuid,
+            amount_usd=txn_dict.get("TransactionAmt", 100.0),
+            risk_score=risk_score,
+            risk_level=risk_level,
+            decision=decision_val,
+            action=action_val,
+            status="blocked" if action_val == "BLOCK" else "review" if action_val == "REVIEW" else "resolved"
+        )
+        session.add(case_rec)
+        session.commit()
+    except Exception as db_err:
+        session.rollback()
+        logger.error(f"Background prediction persistence failed: {db_err}")
+    finally:
+        session.close()
+
 @router.post("/predict", response_model=PredictionResponse, summary="Real-Time Transaction Fraud Risk Scoring")
-async def predict_transaction(txn: TransactionInput, session: Session = Depends(get_session)):
+async def predict_transaction(txn: TransactionInput, background_tasks: BackgroundTasks):
     """
     Score a single transaction in real time with the Tuned LightGBM Champion:
     1. Validates and preprocesses raw features into 492 model dimensions.
     2. Computes uncalibrated raw probability (<1ms).
     3. Runs Isotonic Calibration to generate 0-100 risk score and APPROVE/REVIEW/BLOCK action.
-    4. Extracts top SHAP local risk factor attributions.
-    5. Persists the transaction, risk assessment, and case record in the relational database.
+    4. Extracts top SHAP local risk factor attributions via native C++ pred_contrib.
+    5. Non-blocking asynchronous persistence to relational database.
     """
     t_start = time.perf_counter()
     
@@ -40,7 +113,7 @@ async def predict_transaction(txn: TransactionInput, session: Session = Depends(
         calibrated_prob = model_service.calibrate_probability(raw_prob)
         risk, decision = risk_service.evaluate_risk(raw_prob, calibrated_prob)
         
-        # Explainability
+        # Explainability (Native C++ TreeSHAP)
         explanation = explanation_service.explain_transaction(df_features, risk.risk_level)
         
         total_latency_ms = (time.perf_counter() - t_start) * 1000.0
@@ -48,66 +121,26 @@ async def predict_transaction(txn: TransactionInput, session: Session = Depends(
 
         model_name = model_service.metadata.get("model_name", "RiskGuard-Tuned-LightGBM-Champion")
         model_version = model_service.metadata.get("model_version", "1.0.0")
+        factors_json = json.dumps([f.model_dump() for f in explanation.top_factors])
         
-        # Relational Persistence
-        if session:
-            try:
-                txn_repo = TransactionRepository(session)
-                risk_repo = RiskAssessmentRepository(session)
-                case_repo = CaseRepository(session)
-
-                tx_rec = txn_repo.create(
-                    transaction_uuid=txn_uuid,
-                    provider="direct",
-                    amount_minor=int(min(round(txn.TransactionAmt * 83.0 * 100), 2147483647)),
-                    amount_inr=min(round(txn.TransactionAmt * 83.0, 2), 999999999999.0),
-                    amount_usd=txn.TransactionAmt,
-                    currency="USD",
-                    product_cd=txn.ProductCD or "W",
-                    card_network=txn.card4,
-                    card_type=txn.card6,
-                    email=txn.P_emaildomain,
-                    device_type=txn.DeviceType
-                )
-                session.flush()
-
-                factors_json = json.dumps([f.model_dump() for f in explanation.top_factors])
-                risk_rec = risk_repo.create(
-                    transaction_id=tx_rec.id,
-                    transaction_uuid=txn_uuid,
-                    raw_probability=risk.raw_probability,
-                    calibrated_probability=risk.calibrated_probability,
-                    risk_score=risk.risk_score,
-                    risk_level=risk.risk_level,
-                    decision=decision.decision,
-                    action=decision.action,
-                    policy_rule=decision.policy_rule,
-                    model_name=model_name,
-                    model_version=model_version,
-                    top_factors_json=factors_json,
-                    inference_latency_ms=infer_latency_ms,
-                    total_latency_ms=total_latency_ms
-                )
-                session.flush()
-
-                total_cases = case_repo.count()
-                case_id = f"RG-{total_cases + 1848}"
-                case_repo.create(
-                    case_id=case_id,
-                    transaction_id=tx_rec.id,
-                    risk_assessment_id=risk_rec.id,
-                    transaction_uuid=txn_uuid,
-                    amount_usd=txn.TransactionAmt,
-                    risk_score=risk.risk_score,
-                    risk_level=risk.risk_level,
-                    decision=decision.decision,
-                    action=decision.action,
-                    status="blocked" if decision.action == "BLOCK" else "review" if decision.action == "REVIEW" else "resolved"
-                )
-                session.commit()
-            except Exception as db_err:
-                session.rollback()
-                logger.error(f"Failed to persist prediction transaction: {db_err}")
+        # Dispatch non-blocking database persistence in background
+        background_tasks.add_task(
+            _async_persist_prediction,
+            txn.model_dump(),
+            txn_uuid,
+            risk.raw_probability,
+            risk.calibrated_probability,
+            risk.risk_score,
+            risk.risk_level,
+            decision.decision,
+            decision.action,
+            decision.policy_rule,
+            model_name,
+            model_version,
+            factors_json,
+            infer_latency_ms,
+            total_latency_ms
+        )
 
         return PredictionResponse(
             transaction_id=txn_uuid,

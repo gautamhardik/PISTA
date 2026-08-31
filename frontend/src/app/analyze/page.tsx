@@ -54,21 +54,13 @@ export default function AnalyzePage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setAnalysisStep("Engineering 492 feature dimensions…");
+    setAnalysisStep("Evaluating 492 feature dimensions with LightGBM Champion…");
 
     try {
       const payload = buildPayload();
-      
-      // Step 2
-      await new Promise((r) => setTimeout(r, 200));
-      setAnalysisStep("Scoring with LightGBM Champion & Isotonic Calibrator…");
       const result: PredictionResponse = await api.predict(payload);
 
-      // Step 3
-      setAnalysisStep("Computing TreeSHAP local factor attributions…");
       dispatch({ type: "SET_PREDICTION", payload: result });
-      
-      await new Promise((r) => setTimeout(r, 250));
       router.push("/result");
     } catch (err: any) {
       console.error(err);

@@ -161,13 +161,28 @@ export function LivingSignalNetwork({ className = "" }: { className?: string }) 
         }
       }
 
-      animId = requestAnimationFrame(render);
+      if (!document.hidden) {
+        animId = requestAnimationFrame(render);
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        cancelAnimationFrame(animId);
+        animId = requestAnimationFrame(render);
+      } else {
+        cancelAnimationFrame(animId);
+      }
     };
 
     render();
 
+    window.addEventListener("resize", handleResize);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
       window.removeEventListener("resize", handleResize);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       cancelAnimationFrame(animId);
     };
   }, []);
