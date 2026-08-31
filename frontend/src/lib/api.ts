@@ -461,10 +461,10 @@ function generateClientPrediction(input: TransactionInput): PredictionResponse {
       shap_attribution_ms: 39.1,
     },
     model: {
-      name: "PISTA-LightGBM-Champion",
+      name: "PISTA-LightGBM-Engine",
       version: "1.0.0",
       framework: "LightGBM + Isotonic",
-      role: "PRODUCTION_CHAMPION",
+      role: "PRODUCTION_ACTIVE",
     },
     raw_score: rawScore,
     calibrated_probability: prob,
@@ -786,7 +786,7 @@ function handleFallback<T>(path: string, options?: RequestInit): T {
   if (path === "/api/v1/model") {
     return {
       champion: {
-        model_name: "PISTA LightGBM Champion",
+        model_name: "PISTA LightGBM Risk Engine",
         version: "1.0.0",
         architecture: "Tuned LightGBM GBDT + Isotonic Regression Calibrator",
         features_count: 492,
@@ -861,7 +861,7 @@ function handleFallback<T>(path: string, options?: RequestInit): T {
         pipeline_p95_ms: 124.5
       },
       challenger_comparison: [
-        { model: "PISTA LightGBM Champion", roc_auc: 0.9130, pr_auc: 0.5450, brier: 0.0234, status: "CHAMPION" },
+        { model: "PISTA LightGBM Risk Engine", roc_auc: 0.9130, pr_auc: 0.5450, brier: 0.0234, status: "ACTIVE" },
         { model: "XGBoost Tuned Benchmark", roc_auc: 0.9082, pr_auc: 0.5312, brier: 0.0251, status: "CHALLENGER" },
         { model: "CatBoost Gradient Forest", roc_auc: 0.9045, pr_auc: 0.5260, brier: 0.0268, status: "CHALLENGER" },
         { model: "Stacked Tri-Model Blend", roc_auc: 0.9142, pr_auc: 0.5482, brier: 0.0230, status: "CANDIDATE" }
@@ -966,7 +966,7 @@ function handleFallback<T>(path: string, options?: RequestInit): T {
       model_loaded: true,
       feature_count: 492,
       calibrator_loaded: true,
-      champion_model: "PISTA LightGBM Champion"
+      champion_model: "PISTA LightGBM Risk Engine"
     } as unknown as T;
   }
 

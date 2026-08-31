@@ -97,7 +97,7 @@ async def predict_transaction(
     fast_mode: bool = False
 ):
     """
-    Score a single transaction in real time with the Tuned LightGBM Champion:
+    Score a single transaction in real time with the Tuned LightGBM Risk Engine:
     1. Records sliding-window velocity burst counters across composite entity keys.
     2. Validates and preprocesses raw features into 492 model dimensions.
     3. Computes uncalibrated raw probability (<1ms).
@@ -136,7 +136,7 @@ async def predict_transaction(
         total_latency_ms = (time.perf_counter() - t_start) * 1000.0
         txn_uuid = str(uuid.uuid4())[:8]
 
-        model_name = model_service.metadata.get("model_name", "RiskGuard-Tuned-LightGBM-Champion")
+        model_name = model_service.metadata.get("model_name", "PISTA-Tuned-LightGBM-Engine")
         model_version = model_service.metadata.get("model_version", "1.0.0")
         factors_json = json.dumps([f.model_dump() for f in explanation.top_factors])
         
@@ -165,7 +165,7 @@ async def predict_transaction(
                 name=model_name,
                 version=model_version,
                 framework="LightGBM",
-                role="PRODUCTION_CHAMPION"
+                role="PRODUCTION_ACTIVE"
             ),
             risk=risk,
             decision=decision,

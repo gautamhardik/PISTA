@@ -11,7 +11,7 @@
 [![Python 3.13](https://img.shields.io/badge/Python-3.13+-3776AB.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688.svg?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![Next.js 16](https://img.shields.io/badge/Next.js_16-Turbopack-000000.svg?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
-[![LightGBM Champion](https://img.shields.io/badge/LightGBM-Champion_Booster-3395FF.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://lightgbm.readthedocs.io/)
+[![LightGBM Risk Engine](https://img.shields.io/badge/LightGBM-Risk_Booster-3395FF.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://lightgbm.readthedocs.io/)
 [![TreeSHAP](https://img.shields.io/badge/Explainability-TreeSHAP-C7F36B.svg?style=for-the-badge&labelColor=07080a)](https://shap.readthedocs.io/)
 [![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16_Alpine-4169E1.svg?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Tests Passing](https://img.shields.io/badge/Test_Suite-12%2F12_Passing_100%25-10B981.svg?style=for-the-badge&logo=pytest&logoColor=white)](https://github.com/gautamhardik/PISTA/tree/main/backend/tests)
@@ -25,7 +25,7 @@
 > ### 📋 15-Second Executive Brief for Evaluators
 > * **Commercial Problem**: Real-time checkout fraud prevention under extreme class imbalance (3.5% base fraud rate) without adding latency or false declines.
 > * **Benchmark Dataset**: IEEE-CIS Fraud Detection (590,540 real-world transactions with chronological out-of-time validation).
-> * **Production Champion**: `PISTA LightGBM Champion` (Tuned LightGBM + Isotonic Probability Calibrator).
+> * **Production Model**: `PISTA LightGBM Risk Engine` (Tuned LightGBM + Isotonic Probability Calibrator).
 > * **Feature Space**: **492 engineered dimensions** spanning 10 causal feature families (spending deviations, velocity bursts, composite cards).
 > * **Primary Optimization Metric**: **PR-AUC = 0.5450** on held-out validation cohort of 118,534 transactions (vs. ROC-AUC = 0.9130).
 > * **Calibration Quality**: **Brier Score = 0.0234** via Isotonic Regression (guaranteeing reliable posterior probabilities).
@@ -155,7 +155,7 @@ flowchart TD
 
     subgraph CoreML["Machine Learning & Risk Engine"]
         Preprocessor["Single-Pass 492-D Vectorizer"]
-        Booster["PISTA LightGBM Champion (<1ms)"]
+        Booster["PISTA LightGBM Risk Engine (<1ms)"]
         Calibrator["Isotonic Probability Calibrator"]
         Explainer["Singleton TreeSHAP Explainer Pipeline"]
         PolicyEngine["Tri-State Policy Routing Engine"]
@@ -211,7 +211,7 @@ sequenceDiagram
 1. **Ingestion**: Telemetry arrives via client API payload or authenticated Razorpay checkout modal.
 2. **Cryptographic Check**: If gateway payment, the raw byte stream is verified against the HMAC-SHA256 signature.
 3. **492-D Vectorization**: Single-pass vectorizer maps raw features into normalized numeric and categorical tensors with median fallback.
-4. **Champion Inference**: LightGBM Champion scores the 492-D vector in $< 1.0\text{ ms}$.
+4. **Production Model Inference**: LightGBM Risk Engine scores the 492-D vector in $< 1.0\text{ ms}$.
 5. **Probability Calibration**: Isotonic regression maps the raw boosting logit into a true posterior probability $P(\text{Fraud} = 1 | X)$.
 6. **TreeSHAP Decomposition**: Pre-initialized TreeExplainer calculates exact local Shapley values, extracting top risk amplifiers and trust mitigators.
 7. **Tri-State Policy Routing**:
@@ -285,8 +285,8 @@ jupyter nbconvert --to notebook --execute Notebooks/05_model_explainability_and_
 
 | Candidate Model | PR-AUC (Primary) | ROC-AUC | Brier Score | Inference SLA | Operational Status |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **PISTA LightGBM Champion** | **0.5450** | **0.9130** | **0.0234** | **< 1.0 ms** | 🟢 **PRODUCTION ACTIVE** |
-| Heterogeneous Stacked Blend | 0.5413 | 0.9151 | 0.0238 | 4.20 ms | ⚪ Benchmark Challenger |
+| **PISTA LightGBM Risk Engine** | **0.5450** | **0.9130** | **0.0234** | **< 1.0 ms** | 🟢 **PRODUCTION ACTIVE** |
+| Heterogeneous Stacked Blend | 0.5413 | 0.9151 | 0.0238 | 4.20 ms | ⚪ Benchmark Baseline Model |
 | Tuned XGBoost Booster | 0.5382 | 0.9084 | 0.0241 | 2.80 ms | ⚪ Evaluated |
 | CatBoost Classifier | 0.5310 | 0.9022 | 0.0249 | 5.10 ms | ⚪ Evaluated |
 | Random Forest Baseline | 0.4620 | 0.8640 | 0.0285 | 12.5 ms | ⚪ Baseline |
@@ -534,7 +534,7 @@ PISTA/
 │
 ├── backend/                           # FastAPI Backend Engine
 │   ├── app/                           # Routes, services, schemas, DB models, ML pipelines
-│   ├── artifacts/                     # Champion booster and challenger models
+│   ├── artifacts/                     # Production booster and baseline alternative models
 │   ├── tests/                         # Automated unit & integration test suites
 │   ├── requirements.txt               # Complete Python dependencies
 │   └── Dockerfile

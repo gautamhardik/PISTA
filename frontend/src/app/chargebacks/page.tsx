@@ -75,7 +75,7 @@ ${c.shap_top_signals
 - Card Number:    ${c.card_brand} ending in ${c.card_last4}
 - Cardholder:     ${c.cardholder_email}
 - Telemetry IP:   ${c.ip_address} (${c.billing_city})
-- Fraud Model:    PISTA LightGBM Champion v1.0.0 (Isotonic Calibrated)
+- Fraud Model:    PISTA LightGBM Risk Engine (Isotonic Calibrated)
 
 CONCLUSION:
 Based on cryptographic gateway verification and non-repudiable biometric/device telemetry, the merchant requests immediate dismissal of the dispute and full reversal of the chargeback fee.

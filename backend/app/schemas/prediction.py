@@ -8,10 +8,10 @@ class TopRiskFactor(BaseModel):
     feature_value: Optional[Any] = Field(None, description="Observed value for this feature")
 
 class ModelInfo(BaseModel):
-    name: str = Field("RiskGuard Tuned LightGBM Champion", description="Active production model name")
+    name: str = Field("RiskGuard Tuned LightGBM Risk Engine", description="Active production model name")
     version: str = Field("1.0.0", description="Model semantic version")
     framework: str = Field("LightGBM", description="Machine learning framework")
-    role: str = Field("PRODUCTION_CHAMPION", description="Operational role in decision engine")
+    role: str = Field("PRODUCTION_ACTIVE", description="Operational role in decision engine")
 
 class RiskAssessment(BaseModel):
     raw_probability: float = Field(..., description="Uncalibrated booster output probability")

@@ -29,7 +29,7 @@ const defaultSampleCases: CaseEntry[] = [
     id: "RG-1847",
     prediction: {
       transaction_id: "a8f3b29c",
-      model: { name: "RiskGuard-Tuned-LightGBM-Champion", version: "1.0.0", framework: "LightGBM", role: "PRODUCTION_CHAMPION" },
+      model: { name: "PISTA-Tuned-LightGBM-Engine", version: "1.0.0", framework: "LightGBM", role: "PRODUCTION_ACTIVE" },
       risk: { raw_probability: 0.9412, calibrated_probability: 0.9472, risk_score: 94.72, risk_level: "CRITICAL" },
       decision: { decision: "FRAUD", action: "BLOCK", policy_rule: "Calibrated probability >= 0.75 (Automated High-Precision Decline)" },
       explanation: { summary: "Elevated transaction velocity across multiple card proxies", top_factors: [] },

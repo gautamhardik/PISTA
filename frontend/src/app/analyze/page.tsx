@@ -54,7 +54,7 @@ export default function AnalyzePage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setAnalysisStep("Evaluating 492 feature dimensions with LightGBM Champion…");
+    setAnalysisStep("Evaluating 492 feature dimensions with LightGBM Risk Engine…");
 
     try {
       const payload = buildPayload();

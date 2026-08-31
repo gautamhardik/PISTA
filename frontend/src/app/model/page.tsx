@@ -47,7 +47,7 @@ export default function ModelGovernancePage() {
               <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#3395ff]/15 text-[#3395ff] border border-[#3395ff]/30 font-bold uppercase tracking-wider group-hover:bg-[#3395ff]/25 group-hover:shadow-[0_0_12px_rgba(51,149,255,0.35)] transition-all">
                 Model Governance & Spec
               </span>
-              <span className="text-xs font-mono text-zinc-500 group-hover:text-zinc-300 transition-colors">• LightGBM Champion v1.0.0</span>
+              <span className="text-xs font-mono text-zinc-500 group-hover:text-zinc-300 transition-colors">• LightGBM Risk Engine</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white font-display group-hover:text-[#C7F36B] transition-colors">
               Model Architecture & Governance
@@ -57,7 +57,7 @@ export default function ModelGovernancePage() {
           <div className="flex items-center gap-2.5">
             <span className="px-3 py-2 rounded-xl text-xs font-mono uppercase bg-[#C7F36B]/10 border border-[#C7F36B]/30 text-[#C7F36B] font-bold flex items-center gap-2 shadow-[0_0_15px_rgba(199,243,107,0.15)] hover:bg-[#C7F36B]/20 hover:scale-105 transition-all cursor-default">
               <Award className="w-3.5 h-3.5" />
-              PRODUCTION CHAMPION
+              PRODUCTION ACTIVE
             </span>
           </div>
         </div>
@@ -82,7 +82,7 @@ export default function ModelGovernancePage() {
             <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-[#3395ff]/30 hover:-translate-y-0.5 transition-all group cursor-default">
               <span className="text-zinc-500 group-hover:text-zinc-300 block text-[10px] font-semibold transition-colors">03 / BOOSTER</span>
               <span className="text-white group-hover:text-[#3395ff] font-bold block mt-1 font-heading text-sm transition-colors">PISTA LightGBM</span>
-              <span className="text-zinc-400 group-hover:text-zinc-200 text-[11px] transition-colors">Champion (v1.0.0)</span>
+              <span className="text-zinc-400 group-hover:text-zinc-200 text-[11px] transition-colors">Active Model</span>
             </div>
             <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-[#C7F36B]/30 hover:-translate-y-0.5 transition-all group cursor-default">
               <span className="text-[#C7F36B] block text-[10px] font-semibold">04 / CALIBRATION</span>
@@ -216,12 +216,12 @@ export default function ModelGovernancePage() {
                   <Award className="w-4 h-4 text-[#C7F36B]" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white font-heading">PISTA LightGBM Champion</h3>
+                  <h3 className="text-sm font-bold text-white font-heading">PISTA LightGBM Risk Engine</h3>
                   <span className="text-[10px] font-mono text-zinc-400">Calibrated LightGBM GBDT pipeline (v1.0.0)</span>
                 </div>
               </div>
               <span className="px-2.5 py-0.5 rounded text-[10px] font-mono uppercase bg-[#C7F36B] text-[#07080a] font-bold shadow-[0_0_12px_rgba(199,243,107,0.4)]">
-                CHAMPION ACTIVE
+                PRODUCTION ACTIVE
               </span>
             </div>
 

@@ -14,5 +14,5 @@ async def readiness():
         "model_loaded": model_service.model is not None,
         "calibrator_loaded": model_service.calibrator is not None,
         "feature_count": len(model_service.feature_order),
-        "model_name": model_service.metadata.get("model_name", "PISTA Tuned LightGBM Champion")
+        "model_name": model_service.metadata.get("model_name", "PISTA Tuned LightGBM Risk Engine")
     }

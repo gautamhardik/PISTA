@@ -183,7 +183,7 @@ export default function SettingsPage() {
                 <span className="text-white font-semibold">PostgreSQL 16 Alpine</span>
               </div>
               <div className="flex justify-between py-2 border-b border-white/[0.04]">
-                <span className="text-zinc-400">Production Champion</span>
+                <span className="text-zinc-400">Production Active</span>
                 <span className="text-[#C7F36B] font-semibold">PISTA LightGBM (492 Features)</span>
               </div>
               <div className="flex justify-between py-2">
