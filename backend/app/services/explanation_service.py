@@ -1,6 +1,10 @@
 import pandas as pd
 import numpy as np
-import shap
+try:
+    import shap
+except ImportError:
+    shap = None
+
 from app.services.model_service import model_service
 from app.schemas.prediction import Explanation, TopRiskFactor
 from app.core.logging import logger
@@ -23,7 +27,7 @@ class ExplanationService:
         self.explainer = None
 
     def initialize(self):
-        if model_service.model is not None and self.explainer is None:
+        if model_service.model is not None and self.explainer is None and shap is not None:
             try:
                 self.explainer = shap.TreeExplainer(model_service.model)
                 logger.info("SHAP TreeExplainer initialized for Champion LightGBM.")

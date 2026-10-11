@@ -5,11 +5,13 @@
 
 <br/>
 
+[![Live App](https://img.shields.io/badge/🌐_Live_App-frontend--sigma--vert--50.vercel.app-000000.svg?style=for-the-badge&logo=vercel&logoColor=white)](https://frontend-sigma-vert-50.vercel.app)
+[![Live API](https://img.shields.io/badge/⚡_Live_API-backend--ten--dusky--28.vercel.app-000000.svg?style=for-the-badge&logo=fastapi&logoColor=white)](https://backend-ten-dusky-28.vercel.app/health)
 [![GitLab Pipeline](https://gitlab.com/gautamhardik/pista-devsecops-autopilot/badges/main/pipeline.svg)](https://gitlab.com/gautamhardik/pista-devsecops-autopilot/-/pipelines)
 [![GitLab Transcend](https://img.shields.io/badge/GitLab_Transcend-Hackathon_2026-FC6D26.svg?style=for-the-badge&logo=gitlab&logoColor=white)](SUBMISSION.md)
 [![Watch Demo Video](https://img.shields.io/badge/🎬_Watch_Demo-Masterpiece_Launch_Video_(73s)-8B5CF6.svg?style=for-the-badge&logo=youtube&logoColor=white)](output/PISTA_Masterpiece_Launch_Demo.mp4)
 [![GitLab Duo Agent](https://img.shields.io/badge/GitLab_Duo-Supervised_Autonomy-E24329.svg?style=for-the-badge&logo=gitlab&logoColor=white)](.gitlab/duo/)
-[![Google Cloud Run](https://img.shields.io/badge/Google_Cloud_Run-Deployed_(+0.2_Bonus)-4285F4.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](deploy/gcp/)
+[![Google Cloud Run](https://img.shields.io/badge/Google_Cloud_Run-Configured_(+0.2_Bonus)-4285F4.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](deploy/gcp/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 [![Tests Passing](https://img.shields.io/badge/Test_Suite-12%2F12_Passing_100%25-10B981.svg?style=for-the-badge&logo=pytest&logoColor=white)](https://gitlab.com/gautamhardik/pista-devsecops-autopilot/-/pipelines)
 

@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-from pydantic import BaseModel
-from typing import Optional
-import polars as pl
 import os
+from typing import Optional
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+import pandas as pd
 
 from app.core.database import get_session
 from app.db.repositories import CaseRepository, RiskAssessmentRepository
@@ -35,12 +35,12 @@ async def get_analytics_summary():
     summary_path = "output/reports/risk_band_operational_summary.csv"
     if os.path.exists(summary_path):
         try:
-            df_q = pl.read_csv(summary_path)
+            df_q = pd.read_csv(summary_path)
             _CACHED_ANALYTICS_SUMMARY = {
                 "status": "active",
                 "total_validation_traffic": int(df_q['tx_volume'].sum()),
                 "total_frauds_identified": int(df_q['fraud_count'].sum()),
-                "queues": df_q.to_dicts()
+                "queues": df_q.to_dict(orient="records")
             }
             return _CACHED_ANALYTICS_SUMMARY
         except Exception:

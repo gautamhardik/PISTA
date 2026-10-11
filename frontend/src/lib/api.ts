@@ -249,7 +249,7 @@ export interface ReadinessResponse {
   champion_model: string;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://backend-ten-dusky-28.vercel.app";
 
 // --- Dynamic Fallback Engine ---
 function generateClientPrediction(input: TransactionInput): PredictionResponse {
