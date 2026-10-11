@@ -21,10 +21,10 @@ variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
   DOCKER_HOST: "tcp://docker:2375"
-  GCP_PROJECT_ID: ${GCP_PROJECT_ID:-"pista-backend-2026"}
-  GCP_REGION: ${GCP_REGION:-"us-central1"}
-  BACKEND_IMAGE: "gcr.io/$GCP_PROJECT_ID/pista-backend:$CI_COMMIT_SHORT_SHA"
-  FRONTEND_IMAGE: "gcr.io/$GCP_PROJECT_ID/pista-frontend:$CI_COMMIT_SHORT_SHA"
+  GCP_PROJECT_ID: "pista-backend-2026"
+  GCP_REGION: "us-central1"
+  BACKEND_IMAGE: "gcr.io/pista-backend-2026/pista-backend:$CI_COMMIT_SHORT_SHA"
+  FRONTEND_IMAGE: "gcr.io/pista-backend-2026/pista-frontend:$CI_COMMIT_SHORT_SHA"
 
 cache:
   paths:
@@ -130,7 +130,7 @@ package:backend_container:
     - until docker info >/dev/null 2>&1; do echo "Waiting for docker daemon..."; sleep 1; done
   script:
     - echo "Packaging PISTA FastAPI Backend Image..."
-    - docker build -t $BACKEND_IMAGE ./backend
+    - docker build --progress=plain -t $BACKEND_IMAGE ./backend
     - echo "Backend packaging completed successfully."
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
@@ -144,7 +144,7 @@ package:frontend_container:
     - until docker info >/dev/null 2>&1; do echo "Waiting for docker daemon..."; sleep 1; done
   script:
     - echo "Packaging PISTA Next.js Spatial Frontend Image..."
-    - docker build -t $FRONTEND_IMAGE ./frontend
+    - docker build --progress=plain -t $FRONTEND_IMAGE ./frontend
     - echo "Frontend packaging completed successfully."
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
