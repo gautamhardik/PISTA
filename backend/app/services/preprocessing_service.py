@@ -1,10 +1,8 @@
 import numpy as np
-import polars as pl
 import pandas as pd
 from typing import Dict, Any
 from app.schemas.transaction import TransactionInput
 from app.services.model_service import model_service
-from app.core.logging import logger
 
 class PreprocessingService:
     def transform_transaction(self, txn: TransactionInput) -> pd.DataFrame:

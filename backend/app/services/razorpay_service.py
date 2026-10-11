@@ -13,7 +13,7 @@ from app.services.preprocessing_service import preprocessing_service
 from app.services.model_service import model_service
 from app.services.risk_service import risk_service
 from app.services.explanation_service import explanation_service
-from app.schemas.prediction import PredictionResponse, ModelInfo, RiskAssessment, DecisionAction, Explanation, PerformanceTelemetry
+from app.schemas.prediction import PredictionResponse, ModelInfo, DecisionAction, PerformanceTelemetry
 from app.db.repositories import TransactionRepository, PaymentRepository, RiskAssessmentRepository, CaseRepository
 
 class RazorpayService:
@@ -164,7 +164,7 @@ class RazorpayService:
                 session.flush() # Populate tx_rec.id
 
                 # B. Store/Update Payment Record
-                pay_rec = pay_repo.create_or_update(
+                pay_repo.create_or_update(
                     razorpay_order_id=order_id,
                     transaction_id=tx_rec.id,
                     razorpay_payment_id=payment_id,
@@ -199,7 +199,7 @@ class RazorpayService:
                 # D. Create Case
                 total_cases = case_repo.count()
                 case_id = f"RG-{total_cases + 1848}"
-                case_rec = case_repo.create(
+                case_repo.create(
                     case_id=case_id,
                     transaction_id=tx_rec.id,
                     risk_assessment_id=risk_rec.id,

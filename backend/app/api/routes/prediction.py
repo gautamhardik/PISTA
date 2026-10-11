@@ -1,7 +1,9 @@
-import time, uuid, json
+import time
+import uuid
+import json
 from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from sqlalchemy.orm import Session
-from typing import List, Optional
+from typing import List
 
 from app.schemas.transaction import TransactionInput
 from app.schemas.prediction import PredictionResponse, ModelInfo, PerformanceTelemetry
@@ -9,6 +11,7 @@ from app.services.model_service import model_service
 from app.services.preprocessing_service import preprocessing_service
 from app.services.risk_service import risk_service
 from app.services.explanation_service import explanation_service
+from app.services.velocity_cache import velocity_cache
 from app.core.logging import logger
 from app.core.database import SessionLocal, get_session
 from app.models.db_models import TransactionRecord, RiskAssessmentRecord, CaseRecord
@@ -88,7 +91,6 @@ def _async_persist_prediction(
     finally:
         session.close()
 
-from app.services.velocity_cache import velocity_cache
 
 @router.post("/predict", response_model=PredictionResponse, summary="Real-Time Transaction Fraud Risk Scoring")
 async def predict_transaction(
@@ -109,7 +111,7 @@ async def predict_transaction(
     
     try:
         # 1. Update Real-Time Sliding-Window Entity Velocity Cache
-        velocity_metrics = velocity_cache.record_and_get_velocity(
+        _ = velocity_cache.record_and_get_velocity(
             card1=txn.card1,
             addr1=txn.addr1,
             amount=txn.TransactionAmt or 100.0

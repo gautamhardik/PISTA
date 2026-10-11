@@ -1,14 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import Optional
 import polars as pl
 import os
-from datetime import datetime, date
 
 from app.core.database import get_session
-from app.db.repositories import CaseRepository, TransactionRepository, RiskAssessmentRepository
-from app.models.db_models import CaseRecord, TransactionRecord, RiskAssessmentRecord
+from app.db.repositories import CaseRepository, RiskAssessmentRepository
 
 router = APIRouter()
 

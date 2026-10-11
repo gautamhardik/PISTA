@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Any
 
 class TopRiskFactor(BaseModel):
     feature: str = Field(..., description="Feature name or human-readable explanation")

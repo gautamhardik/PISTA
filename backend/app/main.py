@@ -5,7 +5,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.logging import setup_logging, logger
 from app.core.database import init_db
-from app.services.model_service import model_service
 from app.api.routes import health, prediction, model, analytics, payments
 
 setup_logging()

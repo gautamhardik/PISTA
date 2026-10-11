@@ -153,7 +153,7 @@ configure:schema_validation:
     - pip install -r backend/requirements.txt
   script:
     - echo "Validating relational DB schema definitions and repository mappings..."
-    - python -c "from backend.app.core.database import Base; print('Tables registered:', list(Base.metadata.tables.keys()))"
+    - python -c "import sys; sys.path.insert(0, 'backend'); from app.core.database import Base; print('Tables registered:', list(Base.metadata.tables.keys()))"
 
 # ------------------------------------------------------------------------------
 # Stage 6: Release (Google Cloud Run Deployment - +0.2 Bonus Points)

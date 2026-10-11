@@ -1,6 +1,6 @@
 import time
 from collections import defaultdict, deque
-from typing import Dict, Tuple, Optional
+from typing import Dict, Optional
 
 class SlidingWindowVelocityCache:
     """
