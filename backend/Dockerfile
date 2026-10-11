@@ -32,5 +32,5 @@ HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 \
 
 EXPOSE 8000
 
-# Start production server
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Start production server (respects PORT passed by Google Cloud Run or defaults to 8000)
+CMD ["sh", "-c", "python -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

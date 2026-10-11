@@ -1,0 +1,60 @@
+# ==============================================================================
+# GitLab Duo Custom Flow: CI Failure Self-Healing Remediation
+# Trigger: Pipeline Failure Event (verify or secure stage)
+# ==============================================================================
+
+name: "ci_failure_remediation"
+description: >
+  Autonomous flow that diagnoses failing pipeline stages, analyzes tracebacks,
+  synthesizes the minimal surgical bug fix, runs local verification tests, and opens
+  a self-healing Merge Request.
+
+trigger:
+  event: "pipeline_failed"
+  stages: ["verify", "secure"]
+
+steps:
+  - id: "diagnose_failure"
+    action: "fetch_pipeline_logs"
+    params:
+      job_status: "failed"
+    output_variable: "pipeline_error_log"
+
+  - id: "analyze_root_cause"
+    action: "reasoning"
+    prompt: |
+      Analyze the following GitLab CI/CD failure log:
+      {{pipeline_error_log}}
+
+      Determine:
+      1. Which test failed and the root cause exception.
+      2. If it is an HMAC signature verification failure: check if raw byte stream was altered.
+      3. If it is a TreeSHAP latency timeout: check singleton initialization in FastAPI lifespan.
+      4. Formulate the exact surgical code diff required to resolve it.
+    output_variable: "remediation_plan"
+
+  - id: "apply_patch"
+    action: "apply_code_patch"
+    params:
+      patch_content: "{{remediation_plan.patch}}"
+      branch: "duo-fix/{{pipeline.id}}-{{pipeline_error_log.failed_test}}"
+
+  - id: "verify_patch_locally"
+    action: "run_pytest_suite"
+    params:
+      target_test: "{{pipeline_error_log.failed_test}}"
+    output_variable: "test_verification_result"
+
+  - id: "open_merge_request"
+    action: "create_merge_request"
+    params:
+      source_branch: "duo-fix/{{pipeline.id}}-{{pipeline_error_log.failed_test}}"
+      target_branch: "main"
+      title: "🤖 [GitLab Duo Autopilot] Self-Healing Fix for {{pipeline_error_log.failed_test}}"
+      description: |
+        ## Automated Root Cause Analysis
+        {{remediation_plan.analysis}}
+
+        ## Verification Evidence
+        - **Pytest Outcome**: {{test_verification_result.summary}}
+        - **Status**: Ready for Supervisor Review.

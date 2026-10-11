@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "pista-devsecops-tools": {
+      "command": "python",
+      "args": [".gitlab/duo/mcp/pista_mcp_server.py"],
+      "env": {
+        "PYTHONPATH": "backend",
+        "DATABASE_URL": "postgresql://pista_user:pista_secure_password@localhost:5432/pista_db"
+      },
+      "capabilities": {
+        "tools": [
+          "run_tests",
+          "query_telemetry",
+          "verify_hmac_crypto",
+          "inspect_model_lineage",
+          "deploy_staging"
+        ]
+      }
+    }
+  }
+}
