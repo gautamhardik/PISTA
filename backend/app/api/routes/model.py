@@ -4,6 +4,7 @@ from app.services.model_service import model_service
 router = APIRouter()
 
 @router.get("/model", summary="Active Production Model Metadata & Governance")
+@router.get("/model/info", summary="Active Production Model Metadata & Governance Alias")
 async def get_model_info():
     """Retrieve detailed governance metadata, metrics, and challenger benchmarks."""
     return {
