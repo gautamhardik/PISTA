@@ -106,14 +106,19 @@ Exposes four tools to the GitLab Duo Agent:
 
 ---
 
-## ☁️ Google Cloud Live Deployment (+0.2 Bonus Points)
+## ☁️ Deployment Architecture & Cloud Provisioning (Path B & Bonus Target)
 
-* **Platform**: Google Cloud Run (Fully Managed Serverless Containers)
-* **GCP Project**: `pista-backend-2026`
-* **Region**: `us-central1`
-* **Automation**: Single-command deployment script (`deploy/gcp/deploy_to_cloud_run.ps1` and `deploy_to_cloud_run.sh`)
-* **Live Health Check**: `/health` and `/api/v1/health`
-* **Swagger API Explorer**: `/docs`
+> **Official Devpost Path B Rule**: *"Deploy anywhere you like. Google Cloud is not required for either Path. Projects deployed on Google Cloud are eligible for up to 0.2 bonus points."*
+
+* **Google Cloud Deployment Automation**: Complete production deployment script in [`deploy/gcp/deploy_to_cloud_run.sh`](file:///c:/Users/hiten/Downloads/nvidia/deploy/gcp/deploy_to_cloud_run.sh) and [`deploy_to_cloud_run.ps1`](file:///c:/Users/hiten/Downloads/nvidia/deploy/gcp/deploy_to_cloud_run.ps1) targeting Google Cloud Run (`us-central1`).
+* **Multi-Platform Zero-Cost Infrastructure**:
+  * **Render (1-Click Docker Web Service)**: Configured in [`render.yaml`](file:///c:/Users/hiten/Downloads/nvidia/render.yaml) for automated public deployment.
+  * **Vercel (Serverless ASGI)**: Configured in [`backend/vercel.json`](file:///c:/Users/hiten/Downloads/nvidia/backend/vercel.json) using the Mangum FastAPI adapter.
+  * **Docker Multi-Stage Engine**: Standalone container images built in Stage 4 of GitLab CI.
+* **Public Service Endpoints**:
+  * API Health: `/health` & `/api/v1/health`
+  * Interactive Swagger Explorer: `/docs`
+  * Telemetry & Model Drift: `/api/v1/analytics/drift`
 
 ---
 
