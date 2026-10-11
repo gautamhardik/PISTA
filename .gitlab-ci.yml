@@ -162,9 +162,9 @@ release:staging_deployment:
   stage: release_staging
   image: google/cloud-sdk:alpine
   script:
-    - echo "Deploying PISTA services to Google Cloud Run (Project: $GCP_PROJECT_ID)..."
-    - echo "Simulated/Live deployment step targeting Google Cloud Run..."
-    - echo "Deploy URL: https://pista-backend-staging-run.app"
+    - 'echo "Deploying PISTA services to Google Cloud Run Project $GCP_PROJECT_ID..."'
+    - 'echo "Simulated/Live deployment step targeting Google Cloud Run..."'
+    - 'echo "Deploy URL - https://pista-backend-staging-run.app"'
   environment:
     name: staging
     url: https://pista-backend-staging-run.app
@@ -205,10 +205,10 @@ govern:model_lineage_card:
 govern:human_approval_gate:
   stage: govern
   script:
-    - echo "======================================================================"
-    - echo "GitLab Duo Agent: All 8 automated DevSecOps stages executed cleanly."
-    - echo "Awaiting human supervisor sign-off for production promotion..."
-    - echo "======================================================================"
+    - 'echo "======================================================================"'
+    - 'echo "GitLab Duo Agent - All 8 automated DevSecOps stages executed cleanly."'
+    - 'echo "Awaiting human supervisor sign-off for production promotion..."'
+    - 'echo "======================================================================"'
   when: manual
   allow_failure: false
   rules:
