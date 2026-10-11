@@ -13,10 +13,10 @@ def run_load_test_benchmark(num_requests: int = 100):
     Executes a high-concurrency automated latency benchmark across PISTA's
     predict endpoint and reports empirical latency percentiles (P50, P90, P95, P99).
     """
-    print(f"\n=======================================================")
+    print("\n=======================================================")
     print(f" [*] PISTA High-Throughput Latency Benchmark ({num_requests} reqs)")
-    print(f"=======================================================")
-    
+    print("=======================================================")
+
     latencies = []
     sample_payload = {
         "TransactionAmt": 250.00,
@@ -62,14 +62,14 @@ def run_load_test_benchmark(num_requests: int = 100):
     print(f" Total Completed   : {len(latencies)} / {num_requests}")
     print(f" Total Wall Time   : {total_wall_sec:.2f}s")
     print(f" Throughput        : {throughput:.1f} requests/sec")
-    print(f"-------------------------------------------------------")
+    print("-------------------------------------------------------")
     print(f" Min Latency       : {min_lat:.2f} ms")
     print(f" P50 (Median)      : {p50:.2f} ms")
     print(f" P90 Latency       : {p90:.2f} ms")
     print(f" P95 Latency       : {p95:.2f} ms")
     print(f" P99 Latency       : {p99:.2f} ms")
     print(f" Max Latency       : {max_lat:.2f} ms")
-    print(f"=======================================================\n")
+    print("=======================================================\n")
     return {
         "throughput_rps": round(throughput, 1),
         "p50_ms": round(p50, 2),

@@ -20,7 +20,7 @@ class ModelService:
     def _load_artifacts(self):
         try:
             logger.info("Loading RiskGuard Champion & Challenger artifacts...")
-            
+
             # 1. Load Champion Model
             if os.path.exists(settings.MODEL_PATH):
                 self.model = joblib.load(settings.MODEL_PATH)
@@ -35,7 +35,7 @@ class ModelService:
                     self.feature_order = self.feature_schema.get("feature_order", [])
                     features_dict = self.feature_schema.get("features", {})
                     self.categorical_cols = [
-                        col for col in self.feature_order 
+                        col for col in self.feature_order
                         if features_dict.get(col, {}).get("is_categorical", False)
                     ]
                 logger.info(f"Loaded {len(self.feature_order)} feature schema definitions ({len(self.categorical_cols)} categoricals).")
@@ -64,7 +64,7 @@ class ModelService:
 
             self.is_ready = True
             logger.info("PISTA ModelService is fully initialized and READY.")
-            
+
             # Warm up JIT predictor
             try:
                 sample_row = pd.DataFrame([{col: np.nan for col in self.feature_order}])
@@ -82,12 +82,12 @@ class ModelService:
         """Run sub-millisecond booster inference on aligned feature dataframe."""
         if not self.is_ready or self.model is None:
             raise RuntimeError("ModelService is not ready to serve predictions.")
-        
+
         df_eval = df_features[self.feature_order].copy()
         for col in df_eval.columns:
             if df_eval[col].dtype == object or isinstance(df_eval[col].dtype, pd.StringDtype):
                 df_eval[col] = df_eval[col].astype('category')
-            
+
         preds = self.model.predict(df_eval, num_iteration=self.model.best_iteration)
         return float(preds[0])
 

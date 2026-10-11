@@ -63,16 +63,16 @@ async def get_live_analytics(timeframe: str = "today", session: Session = Depend
     """Computes live operational metrics from database with P95 latency and decision routing tailored to timeframe."""
     case_repo = CaseRepository(session)
     risk_repo = RiskAssessmentRepository(session)
-    
+
     recent_assessments = risk_repo.list_recent(limit=500)
     all_cases = case_repo.list_recent(limit=200)
-    
+
     # Calculate base counts from real recorded transactions
     base_tx = len(recent_assessments)
     base_approved = sum(1 for a in recent_assessments if a.action == "APPROVE")
     base_review = sum(1 for a in recent_assessments if a.action == "REVIEW")
     base_blocked = sum(1 for a in recent_assessments if a.action == "BLOCK")
-    
+
     latencies = sorted([a.total_latency_ms for a in recent_assessments if a.total_latency_ms > 0])
     p95_idx = int(len(latencies) * 0.95) if latencies else 0
     p95_latency = latencies[p95_idx] if latencies else 58.4
@@ -116,7 +116,7 @@ async def get_live_analytics(timeframe: str = "today", session: Session = Depend
     approved_scaled = max(base_approved * scale, int(total_scaled_tx * 0.88))
     review_scaled = max(base_review * scale, int(total_scaled_tx * 0.09))
     blocked_scaled = max(base_blocked * scale, total_scaled_tx - approved_scaled - review_scaled)
-    
+
     return {
         "status": "active",
         "timeframe": tf,
@@ -182,7 +182,7 @@ async def update_case_status(case_id: str, update_req: CaseStatusUpdate, session
     from app.db.repositories import CaseAuditRepository
     case_repo = CaseRepository(session)
     audit_repo = CaseAuditRepository(session)
-    
+
     case_record = case_repo.get_by_case_id(case_id)
     if not case_record:
         raise HTTPException(status_code=404, detail=f"Case {case_id} not found.")
@@ -202,7 +202,7 @@ async def update_case_status(case_id: str, update_req: CaseStatusUpdate, session
         resolution=update_req.resolution,
         note=update_req.investigator_note
     )
-    
+
     # Record Audit Event
     audit_repo.log_event(
         case_id=case_id,
@@ -230,7 +230,7 @@ async def list_activity(session: Session = Depends(get_session)):
     """Fetches chronological decision events stored in PostgreSQL."""
     risk_repo = RiskAssessmentRepository(session)
     assessments = risk_repo.list_recent(limit=50)
-    
+
     return [
         {
             "transaction_id": a.transaction_uuid,
@@ -267,7 +267,7 @@ async def list_activity(session: Session = Depends(get_session)):
 @router.get("/analytics/drift", summary="Continuous Model Drift & Population Stability Index (PSI)")
 async def get_model_drift(session: Session = Depends(get_session)):
     """
-    Computes real-time Population Stability Index (PSI) and feature drift 
+    Computes real-time Population Stability Index (PSI) and feature drift
     across recent transactions versus baseline 118K validation reference distributions.
     """
     from app.services.drift_service import drift_service

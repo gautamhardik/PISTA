@@ -4,25 +4,25 @@ from app.core.logging import logger
 
 class RazorpayTransactionAdapter:
     """
-    Translates raw Razorpay order, payment, and customer payloads into 
+    Translates raw Razorpay order, payment, and customer payloads into
     canonical RiskGuard TransactionInput suitable for the 492-feature ML model.
-    
+
     SCIENTIFIC METHODOLOGY, COVARIATE SHIFT & ARCHITECTURAL MAPPING DOCUMENTATION:
     -----------------------------------------------------------------------------------------------------
     IMPORTANT SCIENTIFIC CAVEAT:
-    The Razorpay integration is a technical integration demonstration using the IEEE-CIS-trained 
-    RiskGuard champion model. Because Razorpay transaction data does not contain the complete IEEE-CIS 
-    feature space, unavailable features remain missing according to the established preprocessing protocol. 
-    Therefore, RiskGuard's Razorpay-mode predictions should be interpreted as model outputs under 
+    The Razorpay integration is a technical integration demonstration using the IEEE-CIS-trained
+    RiskGuard champion model. Because Razorpay transaction data does not contain the complete IEEE-CIS
+    feature space, unavailable features remain missing according to the established preprocessing protocol.
+    Therefore, RiskGuard's Razorpay-mode predictions should be interpreted as model outputs under
     distribution shift, not as independently validated Razorpay fraud-performance metrics.
     -----------------------------------------------------------------------------------------------------
     Razorpay Source Field     RiskGuard Canonical Field   IEEE-CIS ML Feature   Transformation & Rationale
     -----------------------------------------------------------------------------------------------------
     payment.amount (paise)    amount_inr -> amount_usd    TransactionAmt        UNIT COMPATIBILITY TRANSFORMATION:
-                                                                                Scaled from INR paise to INR float, then 
-                                                                                converted using fixed 1/83.0 rate so the 
-                                                                                monetary feature uses the same nominal unit 
-                                                                                (USD) as training data. Does not claim statistical 
+                                                                                Scaled from INR paise to INR float, then
+                                                                                converted using fixed 1/83.0 rate so the
+                                                                                monetary feature uses the same nominal unit
+                                                                                (USD) as training data. Does not claim statistical
                                                                                 equivalence to IEEE-CIS dollar distribution.
     payment.method            product_cd                  ProductCD             PROVIDER PROXY MAPPING:
                                                                                 "card" -> "C" (Card), other methods -> "W" (Web).
@@ -40,19 +40,19 @@ class RazorpayTransactionAdapter:
     customer.addr1            billing_region              addr1                 Billing state / regional proxy code.
     customer.addr2            country_code                addr2                 Country / international billing proxy.
     -----------------------------------------------------------------------------------------------------
-    All remaining 480+ IEEE-CIS features (V-features, D-features, C-features) follow the missingness baseline 
-    in PreprocessingService (imputed to NaN and processed via LightGBM's native missing-value split algorithm, 
+    All remaining 480+ IEEE-CIS features (V-features, D-features, C-features) follow the missingness baseline
+    in PreprocessingService (imputed to NaN and processed via LightGBM's native missing-value split algorithm,
     matching the training protocol).
     """
-    
+
     # 1 USD ≈ 83.0 INR (Fixed unit-compatibility baseline)
     INR_TO_USD_RATE = 1.0 / 83.0
 
     @classmethod
     def to_canonical_transaction(
-        cls, 
-        amount_paise: int, 
-        payment_data: Optional[Dict[str, Any]] = None, 
+        cls,
+        amount_paise: int,
+        payment_data: Optional[Dict[str, Any]] = None,
         customer_data: Optional[Dict[str, Any]] = None
     ) -> TransactionInput:
         payment_data = payment_data or {}
@@ -74,7 +74,7 @@ class RazorpayTransactionAdapter:
         card_obj = payment_data.get("card") or {}
         card4 = (customer_data.get("card4") or card_obj.get("network") or "visa").lower()
         card6 = (customer_data.get("card6") or card_obj.get("type") or "credit").lower()
-        
+
         # 4. Email parsing
         email = customer_data.get("email") or payment_data.get("email") or "customer@gmail.com"
         email_domain = customer_data.get("P_emaildomain") or (email.split("@")[-1] if "@" in email else "gmail.com")

@@ -30,13 +30,13 @@ class RazorpayClient:
             "receipt": receipt or f"RG-TEST-{int(amount_paise)}",
             "notes": notes or {"platform": "RiskGuard-Fraud-Decision-Engine"}
         }
-        
+
         logger.info(f"Creating Razorpay Order: amount={amount_paise} paise, currency={currency}")
         res = requests.post(url, json=payload, auth=self.auth, timeout=10)
         if not res.ok:
             logger.error(f"Razorpay Order creation failed: {res.status_code} - {res.text}")
             raise Exception(f"Razorpay Order API Error: {res.status_code} - {res.text}")
-        
+
         return res.json()
 
     def fetch_order(self, order_id: str) -> Dict[str, Any]:

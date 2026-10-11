@@ -7,6 +7,7 @@
 
 [![GitLab Pipeline](https://gitlab.com/gautamhardik/pista-devsecops-autopilot/badges/main/pipeline.svg)](https://gitlab.com/gautamhardik/pista-devsecops-autopilot/-/pipelines)
 [![GitLab Transcend](https://img.shields.io/badge/GitLab_Transcend-Hackathon_2026-FC6D26.svg?style=for-the-badge&logo=gitlab&logoColor=white)](SUBMISSION.md)
+[![Watch Demo Video](https://img.shields.io/badge/🎬_Watch_Demo-Masterpiece_Launch_Video_(73s)-8B5CF6.svg?style=for-the-badge&logo=youtube&logoColor=white)](output/PISTA_Masterpiece_Launch_Demo.mp4)
 [![GitLab Duo Agent](https://img.shields.io/badge/GitLab_Duo-Supervised_Autonomy-E24329.svg?style=for-the-badge&logo=gitlab&logoColor=white)](.gitlab/duo/)
 [![Google Cloud Run](https://img.shields.io/badge/Google_Cloud_Run-Deployed_(+0.2_Bonus)-4285F4.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](deploy/gcp/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
@@ -63,12 +64,13 @@
 
 ---
 
-## 1. Demo & Master Pitch Video
+## 1. Demo & Master Pitch Videos
 
-### 🎬 Master Pitch Video (5m 33s)
-* **Master Video File**: [`output/PISTA_Master_Pitch_Demo.mp4`](output/PISTA_Master_Pitch_Demo.mp4)
-* **Specifications**: Native 2878×1798 Progressive @ 30 FPS, calibrated 1.25x speed, sidechain-ducked inspiring soundtrack, burned-in styled subtitles with keyword highlighting, and animated chapter cards.
-* **Scope**: Architecture overview $\rightarrow$ 492-D velocity scoring $\rightarrow$ Razorpay HMAC authentication $\rightarrow$ PostgreSQL case investigation studio $\rightarrow$ 118K validation analytics $\rightarrow$ Automated chargeback dispute defense.
+### 🚀 GitLab Transcend Hackathon 2026: Official Launch & Demo Video (3m 05s)
+* **Master Video File**: [`output/PISTA_DevSecOps_Autopilot_Launch_Demo.mp4`](output/PISTA_DevSecOps_Autopilot_Launch_Demo.mp4)
+* **Specifications**: Broadcast 1080p (1920×1080) Progressive @ 30 FPS, studio neural voiceover (`en-US-ChristopherNeural`), ambient electronic synthesizer score, synchronized lower-third captions, and complete 9-stage DevSecOps traversal.
+* **Production Blueprint & Teleprompter Script**: [LAUNCH_VIDEO_MASTERPIECE.md](LAUNCH_VIDEO_MASTERPIECE.md)
+* **Scope**: 9-stage DevSecOps lifecycle $\rightarrow$ Razorpay HMAC signature regression $\rightarrow$ GitLab CI failure $\rightarrow$ GitLab Duo Agent custom flow & MCP server $\rightarrow$ 1.4s surgical diff $\rightarrow$ 12/12 verified tests $\rightarrow$ Google Cloud Run staging deployment $\rightarrow$ Supervised human approval gate.
 
 ![PISTA Overview Hero](images/01_hero_overview.png)
 

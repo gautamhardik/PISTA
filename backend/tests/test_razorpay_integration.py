@@ -11,13 +11,12 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from app.main import app
 from app.core.config import settings
 from app.core.database import init_db, SessionLocal
-from app.integrations.razorpay.signature import verify_payment_signature, verify_webhook_signature
+from app.integrations.razorpay.signature import verify_payment_signature
 from app.integrations.razorpay.adapter import razorpay_adapter
 from app.services.preprocessing_service import preprocessing_service
 from app.services.model_service import model_service
 from app.services.risk_service import risk_service
-from app.db.repositories import TransactionRepository, PaymentRepository, RiskAssessmentRepository, CaseRepository, WebhookRepository
-from app.models.db_models import TransactionRecord, PaymentRecord, RiskAssessmentRecord, CaseRecord, WebhookEventRecord
+from app.db.repositories import TransactionRepository, RiskAssessmentRepository, CaseRepository
 
 # Initialize database schema before tests run
 init_db()
@@ -100,7 +99,7 @@ def test_database_transaction_rollback():
         test_uuid = f"test_rollback_{uuid.uuid4().hex[:8]}"
 
         try:
-            tx = txn_repo.create(
+            txn_repo.create(
                 transaction_uuid=test_uuid,
                 provider="test",
                 amount_minor=10000,
@@ -124,7 +123,7 @@ def test_payment_signature_verification():
     order_id = "order_test_12345"
     payment_id = "pay_test_67890"
     secret = settings.RAZORPAY_KEY_SECRET
-    
+
     msg = f"{order_id}|{payment_id}".encode("utf-8")
     valid_sig = hmac.new(secret.encode("utf-8"), msg, hashlib.sha256).hexdigest()
 

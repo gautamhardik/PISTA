@@ -90,7 +90,7 @@ class PreprocessingService:
         # 3. Vectorized single-pass array creation in exact 492 feature order
         # Default missing columns to np.nan directly without fragmentation
         row_values = {col: features.get(col, np.nan) for col in model_service.feature_order}
-        
+
         return pd.DataFrame([row_values], columns=model_service.feature_order)
 
 preprocessing_service = PreprocessingService()

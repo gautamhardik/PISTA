@@ -29,5 +29,5 @@ class TransactionInput(BaseModel):
     R_emaildomain: Optional[str] = Field(None, description="Recipient email domain")
     DeviceType: Optional[str] = Field("desktop", description="Device category (desktop, mobile)")
     DeviceInfo: Optional[str] = Field(None, description="Device string info")
-    
+
     additional_features: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Arbitrary raw IEEE-CIS features")

@@ -8,7 +8,7 @@ class RiskService:
         and Decision Action (APPROVE, REVIEW, BLOCK) following the policy in Notebooks 4 & 5.
         """
         risk_score = round(calibrated_prob * 100.0, 2)
-        
+
         if calibrated_prob < settings.TAU_REVIEW:
             risk_level = "LOW"
             action = "APPROVE"

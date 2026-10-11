@@ -53,4 +53,8 @@ Thumbs.db
 *.ass
 output/
 clip1.mp4
+brag-output/
+
+# IDE Agent metadata
+.gemini/
 

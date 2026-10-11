@@ -1,5 +1,5 @@
-import pytest
-import sys, os
+import sys
+import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -9,12 +9,11 @@ from app.services.model_service import model_service
 
 def test_notebook_to_api_consistency():
     """
-    Verifies that scoring sample transactions directly with the 
+    Verifies that scoring sample transactions directly with the
     Tuned LightGBM booster produces valid calibrated outputs via the FastAPI API endpoint.
     """
     lgb_model = model_service.model
     feature_order = model_service.feature_order
-    calibrator = model_service.calibrator
 
     assert lgb_model is not None, "Model booster not loaded"
     assert len(feature_order) > 0, "Feature order list is empty"
@@ -36,7 +35,7 @@ def test_notebook_to_api_consistency():
             assert "decision" in data
             assert "explanation" in data
             assert "telemetry" in data
-            
+
             # Verify probability bounds and risk score scaling
             assert 0.0 <= data["risk"]["calibrated_probability"] <= 1.0
             assert 0.0 <= data["risk"]["risk_score"] <= 100.0

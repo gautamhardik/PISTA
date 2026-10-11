@@ -108,7 +108,7 @@ async def predict_transaction(
     6. Non-blocking asynchronous persistence to relational database.
     """
     t_start = time.perf_counter()
-    
+
     try:
         # 1. Update Real-Time Sliding-Window Entity Velocity Cache
         _ = velocity_cache.record_and_get_velocity(
@@ -119,29 +119,29 @@ async def predict_transaction(
 
         # 2. Preprocess 492-D Features
         df_features = preprocessing_service.transform_transaction(txn)
-        
+
         # 3. Champion Booster Inference
         t_infer_start = time.perf_counter()
         raw_prob = model_service.predict_raw(df_features)
         infer_latency_ms = (time.perf_counter() - t_infer_start) * 1000.0
-        
+
         # 4. Calibration & Tri-State Decision
         calibrated_prob = model_service.calibrate_probability(raw_prob)
         risk, decision = risk_service.evaluate_risk(raw_prob, calibrated_prob)
-        
+
         # 5. Explainability (Fast Path vs Deep Path)
         if fast_mode:
             explanation = explanation_service.explain_transaction(df_features, risk.risk_level)
         else:
             explanation = explanation_service.explain_transaction(df_features, risk.risk_level)
-        
+
         total_latency_ms = (time.perf_counter() - t_start) * 1000.0
         txn_uuid = str(uuid.uuid4())[:8]
 
         model_name = model_service.metadata.get("model_name", "PISTA-Tuned-LightGBM-Engine")
         model_version = model_service.metadata.get("model_version", "1.0.0")
         factors_json = json.dumps([f.model_dump() for f in explanation.top_factors])
-        
+
         # 6. Dispatch non-blocking database persistence in background
         background_tasks.add_task(
             _async_persist_prediction,
