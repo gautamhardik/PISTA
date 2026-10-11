@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from fastapi import APIRouter, Depends, HTTPException, Request, Header, BackgroundTasks
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.core.database import get_session, SessionLocal
 from app.core.logging import logger
 from app.services.razorpay_service import razorpay_service
@@ -137,7 +138,7 @@ async def handle_webhook(
         raise HTTPException(status_code=400, detail="Missing X-Razorpay-Signature header")
 
     # 2. Verify signature directly on raw bytes
-    is_valid = verify_webhook_signature(raw_body, x_razorpay_signature)
+    is_valid = verify_webhook_signature(raw_body, x_razorpay_signature, settings.RAZORPAY_WEBHOOK_SECRET)
     if not is_valid:
         logger.warning("Invalid Razorpay webhook signature received!")
         raise HTTPException(status_code=401, detail="Invalid webhook signature")

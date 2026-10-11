@@ -76,7 +76,7 @@ class RazorpayService:
         t_start = time.perf_counter()
 
         # 1. HMAC-SHA256 Signature Verification
-        is_valid_sig = verify_payment_signature(order_id, payment_id, signature)
+        is_valid_sig = verify_payment_signature(order_id, payment_id, signature, settings.RAZORPAY_KEY_SECRET)
         if not is_valid_sig:
             logger.error(f"Invalid HMAC-SHA256 signature for Razorpay payment {payment_id}!")
             raise ValueError("Payment signature verification failed. Untrusted checkout response.")
