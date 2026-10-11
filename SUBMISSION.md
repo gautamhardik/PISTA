@@ -2,7 +2,9 @@
 
 > **GitLab Transcend Hackathon 2026 Entry**  
 > **Track**: Path B — Bring Your Own (Supervised Autonomy)  
+> **GitLab Project**: [https://gitlab.com/gautamhardik/pista-devsecops-autopilot](https://gitlab.com/gautamhardik/pista-devsecops-autopilot)  
 > **Original Project**: [https://github.com/gautamhardik/PISTA](https://github.com/gautamhardik/PISTA) (MIT License)  
+> **Live CI/CD Pipeline**: [100% Passed (All 9 Stages)](https://gitlab.com/gautamhardik/pista-devsecops-autopilot/-/pipelines)  
 > **Targeted Awards**: Path B — Best Supervised Agent ($4,000) · Most Stages Covered ($5,000) · Google Cloud Bonus (+0.2 pts)  
 
 ---

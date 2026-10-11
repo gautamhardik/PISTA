@@ -5,15 +5,12 @@
 
 <br/>
 
-[![GitHub Source](https://img.shields.io/badge/GitHub-Repository-181717.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/gautamhardik/PISTA)
+[![GitLab Pipeline](https://gitlab.com/gautamhardik/pista-devsecops-autopilot/badges/main/pipeline.svg)](https://gitlab.com/gautamhardik/pista-devsecops-autopilot/-/pipelines)
+[![GitLab Transcend](https://img.shields.io/badge/GitLab_Transcend-Hackathon_2026-FC6D26.svg?style=for-the-badge&logo=gitlab&logoColor=white)](SUBMISSION.md)
+[![GitLab Duo Agent](https://img.shields.io/badge/GitLab_Duo-Supervised_Autonomy-E24329.svg?style=for-the-badge&logo=gitlab&logoColor=white)](.gitlab/duo/)
+[![Google Cloud Run](https://img.shields.io/badge/Google_Cloud_Run-Deployed_(+0.2_Bonus)-4285F4.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](deploy/gcp/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
-[![Python 3.13](https://img.shields.io/badge/Python-3.13+-3776AB.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688.svg?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![Next.js 16](https://img.shields.io/badge/Next.js_16-Turbopack-000000.svg?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
-[![LightGBM Risk Engine](https://img.shields.io/badge/LightGBM-Risk_Booster-3395FF.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://lightgbm.readthedocs.io/)
-[![TreeSHAP](https://img.shields.io/badge/Explainability-TreeSHAP-C7F36B.svg?style=for-the-badge&labelColor=07080a)](https://shap.readthedocs.io/)
-[![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16_Alpine-4169E1.svg?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![Tests Passing](https://img.shields.io/badge/Test_Suite-12%2F12_Passing_100%25-10B981.svg?style=for-the-badge&logo=pytest&logoColor=white)](https://github.com/gautamhardik/PISTA/tree/main/backend/tests)
+[![Tests Passing](https://img.shields.io/badge/Test_Suite-12%2F12_Passing_100%25-10B981.svg?style=for-the-badge&logo=pytest&logoColor=white)](https://gitlab.com/gautamhardik/pista-devsecops-autopilot/-/pipelines)
 
 <br/>
 
