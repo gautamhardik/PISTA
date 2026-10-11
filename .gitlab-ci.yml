@@ -65,11 +65,11 @@ verify:test_suites:
   before_script:
     - apt-get update && apt-get install -y --no-install-recommends build-essential libgomp1 libpq-dev curl
     - pip install --upgrade pip
-    - pip install -r backend/requirements.txt
+    - pip install -r backend/requirements.txt pytest pytest-cov pytest-asyncio
   script:
     - echo "Executing PISTA Automated Verification Suite..."
     - cd backend
-    - pytest tests/ -v --junitxml=junit-report.xml
+    - python -m pytest tests/ -v --junitxml=junit-report.xml
   artifacts:
     when: always
     reports:
@@ -112,11 +112,11 @@ secure:crypto_hmac_audit:
   image: python:3.11-slim
   before_script:
     - apt-get update && apt-get install -y --no-install-recommends libgomp1 libpq-dev
-    - pip install -r backend/requirements.txt
+    - pip install -r backend/requirements.txt pytest pytest-asyncio
   script:
     - echo "Validating Razorpay Webhook HMAC cryptographic integrity..."
     - cd backend
-    - pytest tests/test_razorpay_integration.py -k "test_payment_signature_verification or test_tampered_signature_rejection" -v
+    - python -m pytest tests/test_razorpay_integration.py -k "test_payment_signature_verification or test_tampered_signature_rejection" -v
 
 # ------------------------------------------------------------------------------
 # Stage 4: Package (Docker Container Builds)
@@ -212,11 +212,11 @@ govern:model_lineage_card:
   image: python:3.11-slim
   before_script:
     - apt-get update && apt-get install -y --no-install-recommends libgomp1 libpq-dev
-    - pip install -r backend/requirements.txt
+    - pip install -r backend/requirements.txt pytest pytest-asyncio
   script:
     - echo "Generating model governance audit report and decision policy audit..."
     - cd backend
-    - pytest tests/test_api.py -k "test_model_info" -v
+    - python -m pytest tests/test_api.py -k "test_model_info" -v
   artifacts:
     paths:
       - backend/artifacts/
