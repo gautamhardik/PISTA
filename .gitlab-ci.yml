@@ -111,6 +111,7 @@ secure:crypto_hmac_audit:
   stage: secure
   image: python:3.11-slim
   before_script:
+    - apt-get update && apt-get install -y --no-install-recommends libgomp1 libpq-dev
     - pip install -r backend/requirements.txt
   script:
     - echo "Validating Razorpay Webhook HMAC cryptographic integrity..."
@@ -125,6 +126,8 @@ package:backend_container:
   image: docker:24.0.5
   services:
     - docker:24.0.5-dind
+  before_script:
+    - until docker info >/dev/null 2>&1; do echo "Waiting for docker daemon..."; sleep 1; done
   script:
     - echo "Packaging PISTA FastAPI Backend Image..."
     - docker build -t $BACKEND_IMAGE ./backend
@@ -137,6 +140,8 @@ package:frontend_container:
   image: docker:24.0.5
   services:
     - docker:24.0.5-dind
+  before_script:
+    - until docker info >/dev/null 2>&1; do echo "Waiting for docker daemon..."; sleep 1; done
   script:
     - echo "Packaging PISTA Next.js Spatial Frontend Image..."
     - docker build -t $FRONTEND_IMAGE ./frontend
@@ -151,6 +156,7 @@ configure:schema_validation:
   stage: configure
   image: python:3.11-slim
   before_script:
+    - apt-get update && apt-get install -y --no-install-recommends libgomp1 libpq-dev
     - pip install -r backend/requirements.txt
   script:
     - echo "Validating relational DB schema definitions and repository mappings..."
@@ -193,6 +199,7 @@ govern:model_lineage_card:
   stage: govern
   image: python:3.11-slim
   before_script:
+    - apt-get update && apt-get install -y --no-install-recommends libgomp1 libpq-dev
     - pip install -r backend/requirements.txt
   script:
     - echo "Generating model governance audit report and decision policy audit..."
